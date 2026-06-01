@@ -1,0 +1,2729 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lars T8 v3 — Guía Completa</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0e1a;--card:#1a1a2a;--card2:#222236;
+  --border:#32324a;--border2:#44446a;
+  --accent:#ff6b2b;--accent2:#ff9060;
+  --purple:#a090ff;--teal:#22cc90;--amber:#ffb830;
+  --blue:#60aaff;--red:#ff5060;--green:#66cc6a;
+  --text:#eeeeff;--muted:#9090b0;--dim:#3a3a58;
+  --mono:'Share Tech Mono',monospace;
+  --head:'Rajdhani',sans-serif;
+  --body:'Exo 2',sans-serif;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--body);overflow:hidden;}
+
+/* ── HEADER ── */
+#hdr{
+  height:52px;background:rgba(14,14,26,.98);border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;position:relative;z-index:100;
+}
+.logo{
+  padding:0 18px;font-family:var(--head);font-weight:700;font-size:15px;
+  letter-spacing:2px;color:#fff;border-right:1px solid var(--border2);
+  height:100%;display:flex;align-items:center;gap:8px;white-space:nowrap;
+}
+.logo-hex{
+  width:26px;height:26px;background:var(--accent);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.logo span{color:var(--accent2);}
+.v3badge{
+  font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:3px;
+  background:rgba(34,204,144,.15);border:1px solid rgba(34,204,144,.3);
+  color:var(--teal);letter-spacing:1px;
+}
+.tabs{display:flex;height:100%;flex:1;}
+.tab{
+  display:flex;align-items:center;gap:6px;padding:0 18px;
+  cursor:pointer;font-family:var(--mono);font-size:10px;
+  letter-spacing:1px;text-transform:uppercase;color:var(--muted);
+  border-right:1px solid var(--border);border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap;
+}
+.tab:hover{color:var(--text);background:rgba(255,255,255,.02);}
+.tab.active{color:var(--accent2);border-bottom-color:var(--accent);background:rgba(255,107,43,.04);}
+.tab-icon{font-size:13px;}
+
+/* ── LAYOUT ── */
+#main{height:calc(100vh - 52px);display:flex;}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:240px;flex-shrink:0;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.sb-search{padding:8px;border-bottom:1px solid var(--border);}
+.sb-search input{
+  width:100%;background:var(--bg);border:1px solid var(--border2);
+  color:var(--text);font-family:var(--mono);font-size:11px;
+  padding:6px 10px;border-radius:4px;outline:none;
+}
+.sb-search input:focus{border-color:var(--accent);}
+.sb-search input::placeholder{color:var(--dim);}
+.move-list{flex:1;overflow-y:auto;}
+.move-list::-webkit-scrollbar{width:3px;}
+.move-list::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px;}
+.grp-label{
+  padding:5px 12px 3px;font-family:var(--mono);font-size:8px;
+  letter-spacing:2px;text-transform:uppercase;color:var(--dim);
+  background:var(--card2);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:1;
+}
+.move-row{
+  padding:7px 12px;cursor:pointer;display:flex;align-items:center;
+  gap:8px;border-bottom:1px solid var(--border);transition:background .1s;
+  position:relative;
+}
+.move-row:hover{background:var(--card2);}
+.move-row.active{background:rgba(255,107,43,.1);border-left:2px solid var(--accent);}
+.mr-cmd{font-family:var(--mono);font-size:11px;color:var(--amber);min-width:70px;}
+.mr-name{font-size:10px;color:#c8c8e0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mr-new{font-family:var(--mono);font-size:7px;padding:1px 4px;border-radius:2px;
+  background:rgba(34,204,144,.2);color:var(--teal);border:1px solid rgba(34,204,144,.3);margin-left:auto;flex-shrink:0;}
+
+/* ── CONTENT AREA ── */
+#content{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+
+/* MOVE DETAIL */
+#move-detail{flex:1;overflow-y:auto;padding:16px;}
+#move-detail::-webkit-scrollbar{width:3px;}
+#move-detail::-webkit-scrollbar-thumb{background:var(--dim);}
+
+.detail-card{background:var(--card);border:1px solid var(--border2);border-radius:8px;overflow:hidden;}
+
+.dc-header{
+  padding:14px 18px;background:var(--card2);border-bottom:1px solid var(--border);
+  display:flex;gap:14px;align-items:flex-start;
+}
+.dc-cmd{font-family:var(--mono);font-size:22px;color:var(--amber);}
+.dc-name{font-size:12px;color:var(--muted);margin-top:3px;}
+.dc-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
+.badge{font-family:var(--mono);font-size:8px;padding:2px 7px;border-radius:3px;letter-spacing:.5px;}
+.dc-startup{margin-left:auto;text-align:right;flex-shrink:0;}
+.dc-startup .lbl{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;}
+.dc-startup .val{font-family:var(--head);font-size:24px;font-weight:700;}
+
+/* VIDEO */
+.dc-video{position:relative;background:#000;border-bottom:1px solid var(--border);}
+.dc-video video{width:100%;max-height:200px;object-fit:contain;display:block;}
+.dc-video .vid-label{
+  position:absolute;top:8px;left:10px;
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;
+  background:rgba(0,0,0,.75);color:var(--amber);
+  padding:2px 7px;border-radius:3px;
+}
+.dc-video .vid-src{
+  position:absolute;top:8px;right:10px;
+  font-family:var(--mono);font-size:8px;
+  background:rgba(34,204,144,.2);color:var(--teal);
+  padding:2px 6px;border-radius:3px;border:1px solid rgba(34,204,144,.3);
+}
+.dc-novideo{
+  padding:16px;text-align:center;font-family:var(--mono);
+  font-size:10px;color:var(--dim);background:var(--bg);
+}
+
+/* FRAMES GRID */
+.frames-grid{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
+.fg{padding:10px 8px;border-right:1px solid var(--border);text-align:center;}
+.fg:last-child{border-right:none;}
+.fg-sub{font-size:8px;color:#8888aa;font-family:var(--mono);margin-top:2px;letter-spacing:.3px;}
+.fg-lbl{font-family:var(--mono);font-size:8px;color:#aaaacc;letter-spacing:.5px;margin-bottom:3px;}
+.fg-val{font-family:var(--head);font-size:18px;font-weight:700;}
+.fpos{color:#90ee90;} .fneg{color:#ff8888;} .fneut{color:var(--muted);} .flaunch{color:#ffaa70;}
+
+/* OUTCOMES */
+.outcomes{padding:12px 16px;display:flex;flex-direction:column;gap:7px;border-bottom:1px solid var(--border);}
+.out-row{display:grid;grid-template-columns:56px 1fr;gap:8px;align-items:start;}
+.out-lbl{font-family:var(--mono);font-size:8px;padding:3px 5px;border-radius:3px;text-align:center;text-transform:uppercase;}
+.ol-hit{background:rgba(100,220,100,.18);color:#90ee90;}
+.ol-blk{background:rgba(255,80,80,.15);color:#ff9090;}
+.ol-ch{background:rgba(255,130,50,.2);color:#ffbb80;}
+.out-txt{font-size:11px;color:var(--text);line-height:1.5;}
+.out-tip{font-size:10px;color:var(--muted);font-style:italic;margin-top:2px;}
+
+/* FOLLOWUPS */
+.fu-section{padding:12px 16px;}
+.fu-title{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:8px;}
+.fu-card{
+  background:var(--bg);border:1px solid var(--border);border-radius:5px;
+  padding:8px 12px;margin-bottom:5px;cursor:pointer;
+  display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;
+  transition:all .12s;
+}
+.fu-card:hover{background:var(--card2);border-color:var(--border2);transform:translateX(2px);}
+.fu-card.best{border-color:rgba(34,204,144,.35);background:rgba(34,204,144,.04);}
+.fu-cmd{font-family:var(--mono);font-size:12px;color:var(--amber);}
+.fu-desc{font-size:10px;color:var(--muted);margin-top:2px;}
+.fu-tags{display:flex;gap:3px;margin-top:3px;flex-wrap:wrap;}
+.fu-frame{font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:3px;}
+.fu-best-tag{font-family:var(--mono);font-size:8px;color:var(--teal);}
+
+/* NOTES */
+.dc-notes{padding:10px 16px;background:var(--bg);border-top:1px solid var(--border);}
+.dc-notes-title{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--dim);margin-bottom:4px;}
+.dc-note{font-size:10px;color:var(--muted);line-height:1.5;padding:1px 0;}
+
+/* LINKS */
+.dc-links{padding:10px 16px;display:flex;gap:8px;border-top:1px solid var(--border);}
+.dc-link{
+  flex:1;padding:7px;border-radius:4px;text-align:center;
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;
+  text-decoration:none;cursor:pointer;border:1px solid;transition:all .15s;
+}
+.dc-link-td{background:rgba(96,170,255,.08);border-color:rgba(96,170,255,.3);color:var(--blue);}
+.dc-link-td:hover{background:rgba(96,170,255,.16);}
+.dc-link-oki{background:rgba(255,107,43,.08);border-color:rgba(255,107,43,.3);color:var(--accent2);}
+.dc-link-oki:hover{background:rgba(255,107,43,.16);}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;gap:12px;color:var(--dim);text-align:center;padding:40px;
+}
+.empty-icon{font-size:40px;opacity:.3;}
+.empty-h{font-family:var(--head);font-size:16px;color:var(--muted);}
+.empty-p{font-size:12px;line-height:1.6;max-width:300px;}
+
+/* ── TREE VIEW ── */
+#tree-view{
+  flex:1;overflow:hidden;position:relative;cursor:grab;display:none;
+}
+#tree-view.grabbing{cursor:grabbing;}
+#tree-canvas{position:absolute;top:0;left:0;transform-origin:0 0;}
+#tree-svg{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;}
+
+/* Tree toolbar */
+#tree-toolbar{
+  position:absolute;top:10px;right:10px;z-index:10;
+  display:flex;gap:6px;flex-direction:column;align-items:flex-end;
+}
+.tree-ctrl{
+  background:rgba(14,14,26,.9);border:1px solid var(--border2);
+  border-radius:4px;padding:5px 10px;font-family:var(--mono);
+  font-size:10px;color:var(--muted);cursor:pointer;
+  transition:all .12s;white-space:nowrap;
+}
+.tree-ctrl:hover{border-color:var(--accent);color:var(--accent2);}
+.tree-select{
+  background:rgba(14,14,26,.95);border:1px solid var(--border2);
+  color:var(--text);font-family:var(--mono);font-size:10px;
+  padding:5px 10px;border-radius:4px;outline:none;cursor:pointer;
+}
+.tree-select:focus{border-color:var(--accent);}
+
+/* Tree nodes */
+.tnode{
+  position:absolute;background:var(--card);border:1px solid var(--border2);
+  border-radius:7px;cursor:pointer;min-width:180px;
+  transition:border-color .12s,box-shadow .12s;
+}
+.tnode:hover{border-color:var(--accent2);box-shadow:0 0 0 2px rgba(255,107,43,.12);}
+.tnode.t-root{border-color:var(--purple);box-shadow:0 0 0 2px rgba(160,144,255,.12);}
+.tnode.t-best{border-color:rgba(34,204,144,.4);background:rgba(34,204,144,.04);}
+.tnode.t-selected{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,107,43,.2);}
+.tn-head{padding:7px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;}
+.tn-cmd{font-family:var(--mono);font-size:12px;color:var(--amber);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tn-best{font-size:10px;color:var(--teal);}
+.tn-exp{
+  width:18px;height:18px;border-radius:3px;background:var(--dim);
+  border:none;color:var(--muted);font-size:11px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0;
+}
+.tn-exp:hover{background:rgba(255,107,43,.2);color:var(--accent2);}
+.tn-body{padding:5px 10px 7px;}
+.tn-frames{display:flex;gap:4px;flex-wrap:wrap;}
+.tn-f{
+  font-family:var(--mono);font-size:10px;padding:4px 8px 3px;border-radius:3px;
+  background:var(--dim);display:flex;flex-direction:column;align-items:center;gap:2px;min-width:48px;
+}
+.tn-fl{font-size:7px;color:#aaaacc;letter-spacing:.5px;text-transform:uppercase;line-height:1;white-space:nowrap;}
+.tn-fv{font-size:11px;font-weight:600;line-height:1.1;}
+.tn-tags{display:flex;gap:3px;flex-wrap:wrap;margin-top:3px;}
+.tn-tag{font-family:var(--mono);font-size:7px;padding:1px 4px;border-radius:2px;}
+
+/* Tree minimap */
+#minimap{
+  position:absolute;bottom:12px;left:12px;width:150px;height:90px;
+  background:rgba(14,14,26,.9);border:1px solid var(--border2);border-radius:5px;overflow:hidden;
+}
+#minimap canvas{width:100%;height:100%;}
+
+/* ── HOVER PREVIEW TOOLTIP ── */
+#preview-tt{
+  display:none;position:fixed;z-index:999;width:250px;
+  background:var(--card);border:1px solid var(--border2);border-radius:7px;
+  overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.7);pointer-events:none;
+}
+#preview-tt.show{display:block;}
+.pt-video{width:100%;height:130px;background:#000;position:relative;overflow:hidden;}
+.pt-video video{width:100%;height:100%;object-fit:contain;}
+.pt-placeholder{
+  width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;
+}
+.pt-bars{display:flex;align-items:flex-end;gap:3px;height:50px;}
+.pt-bar{width:9px;border-radius:2px 2px 0 0;animation:barP 1.4s ease-in-out infinite;}
+.pt-bar:nth-child(1){height:30%;background:#ff6b2b;animation-delay:0s;}
+.pt-bar:nth-child(2){height:70%;background:#ffb830;animation-delay:.1s;}
+.pt-bar:nth-child(3){height:100%;background:#22cc90;animation-delay:.2s;}
+.pt-bar:nth-child(4){height:55%;background:#60aaff;animation-delay:.3s;}
+.pt-bar:nth-child(5){height:80%;background:#a090ff;animation-delay:.4s;}
+.pt-bar:nth-child(6){height:40%;background:#ffb830;animation-delay:.5s;}
+@keyframes barP{0%,100%{transform:scaleY(1);opacity:.7;}50%{transform:scaleY(1.2);opacity:1;}}
+.pt-cmd-lbl{position:absolute;bottom:6px;left:8px;font-family:var(--mono);font-size:10px;color:var(--amber);background:rgba(0,0,0,.7);padding:2px 6px;border-radius:3px;}
+.pt-novid{font-family:var(--mono);font-size:8px;color:var(--dim);position:absolute;top:6px;right:8px;background:rgba(0,0,0,.5);padding:1px 5px;border-radius:2px;}
+.pt-body{padding:8px 10px;}
+.pt-name{font-size:11px;font-weight:500;color:var(--text);margin-bottom:4px;}
+.pt-fgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;}
+.pt-f{background:var(--bg);border-radius:3px;padding:3px;text-align:center;}
+.pt-fl{font-family:var(--mono);font-size:7px;color:var(--dim);}
+.pt-fv{font-family:var(--head);font-size:12px;font-weight:700;margin-top:1px;}
+.pt-tags{display:flex;gap:2px;flex-wrap:wrap;margin-top:5px;}
+
+/* ── SITUATION PICKER ── */
+#bld-sit-overlay{
+  display:none;position:fixed;inset:0;z-index:700;
+  background:rgba(0,0,0,.65);align-items:center;justify-content:center;
+}
+#bld-sit-overlay.show{display:flex;}
+#bld-sit-dialog{
+  background:var(--card);border:1px solid var(--border2);border-radius:10px;
+  padding:18px 20px;width:360px;box-shadow:0 16px 48px rgba(0,0,0,.85);
+}
+#bld-sit-header{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);
+}
+.sit-opt{
+  background:var(--bg);border:1px solid var(--border2);border-radius:6px;
+  padding:10px 14px;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:12px;
+}
+.sit-opt:hover{border-color:var(--border2);background:var(--card2);}
+.sit-opt.sit-selected{border-color:var(--accent2);}
+.sit-opt-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.sit-opt-label{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:2px;}
+.sit-opt-val{font-family:var(--head);font-size:18px;font-weight:700;}
+.sit-opt-calc{font-family:var(--mono);font-size:9px;margin-top:4px;padding:3px 8px;border-radius:3px;display:inline-block;}
+.sit-opt-result{font-family:var(--mono);font-size:10px;font-weight:600;margin-left:auto;text-align:right;flex-shrink:0;}
+.sit-confirm{
+  margin-top:14px;width:100%;padding:8px;border-radius:5px;cursor:pointer;
+  font-family:var(--mono);font-size:10px;letter-spacing:1px;border:1px solid;
+  background:rgba(255,107,43,.12);border-color:rgba(255,107,43,.35);color:var(--accent2);
+  transition:all .15s;
+}
+.sit-confirm:hover{background:rgba(255,107,43,.22);}
+/* ── NOTES ── */
+.bnote{
+  position:absolute;min-width:160px;max-width:260px;
+  background:rgba(255,184,48,.08);border:1.5px solid rgba(255,184,48,.35);
+  border-radius:6px;padding:0;cursor:default;
+  box-shadow:0 2px 12px rgba(0,0,0,.4);
+}
+.bnote:hover{border-color:rgba(255,184,48,.6);}
+.bnote-head{
+  padding:4px 8px;background:rgba(255,184,48,.12);border-bottom:1px solid rgba(255,184,48,.2);
+  display:flex;align-items:center;gap:4px;cursor:grab;border-radius:5px 5px 0 0;
+}
+.bnote-icon{font-size:10px;}
+.bnote-del{margin-left:auto;width:14px;height:14px;border-radius:2px;
+  background:rgba(255,80,80,.15);border:1px solid rgba(255,80,80,.3);
+  color:#ff8080;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.bnote-del:hover{background:rgba(255,80,80,.3);}
+.bnote-body{
+  padding:6px 8px;font-family:var(--body);font-size:11px;color:#ffe090;line-height:1.5;
+  min-height:40px;outline:none;white-space:pre-wrap;word-break:break-word;cursor:text;
+  border-radius:0 0 5px 5px;
+}
+.bnote-body:empty:before{content:attr(data-ph);color:rgba(255,184,48,.35);font-style:italic;}
+/* ── SAVED COMBOS ── */
+.saved-row{
+  padding:7px 10px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:6px;cursor:pointer;
+  transition:background .1s;
+}
+.saved-row:hover{background:var(--card2);}
+.saved-row.active-saved{background:rgba(34,204,144,.08);border-left:2px solid var(--teal);}
+.saved-name{font-family:var(--mono);font-size:10px;color:var(--text);flex:1;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.saved-meta{font-size:8px;color:var(--dim);font-family:var(--mono);white-space:nowrap;}
+.saved-del{width:16px;height:16px;border-radius:3px;background:rgba(255,80,80,.12);
+  border:1px solid rgba(255,80,80,.25);color:#ff8080;font-size:10px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .1s;}
+.saved-del:hover{background:rgba(255,80,80,.28);}
+.saved-empty{padding:16px 10px;font-family:var(--mono);font-size:9px;
+  color:var(--dim);text-align:center;line-height:1.6;}
+#bld-name-overlay{
+  display:none;position:fixed;inset:0;z-index:600;
+  background:rgba(0,0,0,.6);align-items:center;justify-content:center;
+}
+#bld-name-overlay.show{display:flex;}
+#bld-name-dialog{
+  background:var(--card);border:1px solid var(--border2);border-radius:8px;
+  padding:20px;width:320px;box-shadow:0 12px 40px rgba(0,0,0,.8);
+}
+#bld-name-dialog h3{font-family:var(--head);font-size:14px;color:var(--text);margin-bottom:12px;}
+#bld-name-inp{
+  width:100%;background:var(--bg);border:1px solid var(--border2);color:var(--text);
+  font-family:var(--mono);font-size:12px;padding:8px 10px;border-radius:4px;
+  outline:none;margin-bottom:12px;
+}
+#bld-name-inp:focus{border-color:var(--teal);}
+.bld-dlg-btns{display:flex;gap:8px;justify-content:flex-end;}
+.bld-dlg-btn{font-family:var(--mono);font-size:10px;padding:6px 16px;border-radius:4px;cursor:pointer;border:1px solid;transition:all .15s;}
+.bld-dlg-ok{background:rgba(34,204,144,.15);border-color:rgba(34,204,144,.4);color:var(--teal);}
+.bld-dlg-ok:hover{background:rgba(34,204,144,.28);}
+.bld-dlg-cancel{background:rgba(255,255,255,.05);border-color:var(--border2);color:var(--muted);}
+.bld-dlg-cancel:hover{background:rgba(255,255,255,.1);}
+
+/* ── BUILDER ── */
+.bld-dd{
+  position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:200;
+  background:var(--card);border:1px solid var(--border2);border-radius:5px;
+  max-height:260px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.7);
+}
+.bld-dd::-webkit-scrollbar{width:3px;}
+.bld-dd::-webkit-scrollbar-thumb{background:var(--dim);}
+.bld-opt{
+  padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border);font-family:var(--mono);
+  transition:background .1s;
+}
+.bld-opt:last-child{border-bottom:none;}
+.bld-opt:hover{background:var(--card2);}
+.bld-opt-cmd{font-size:11px;color:var(--amber);min-width:80px;}
+.bld-opt-name{font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bld-opt-blk{font-size:10px;font-weight:600;min-width:32px;text-align:right;flex-shrink:0;}
+/* Builder nodes */
+.bnode{
+  position:absolute;background:var(--card);border:1px solid var(--border2);
+  border-radius:7px;cursor:pointer;min-width:190px;max-width:210px;
+  transition:border-color .12s,box-shadow .12s;user-select:none;
+}
+.bnode:hover{border-color:var(--accent2);box-shadow:0 0 0 2px rgba(255,107,43,.12);}
+.bnode.bn-root{border-color:var(--purple);box-shadow:0 0 0 2px rgba(160,144,255,.12);}
+.bnode.bn-selected{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,107,43,.2);}
+.bn-head{padding:7px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:5px;}
+.bn-cmd{font-family:var(--mono);font-size:12px;color:var(--amber);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bn-del{width:16px;height:16px;border-radius:3px;background:rgba(255,80,80,.15);border:1px solid rgba(255,80,80,.3);
+  color:#ff8080;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .1s;}
+.bn-del:hover{background:rgba(255,80,80,.3);}
+.bn-add{width:18px;height:18px;border-radius:3px;background:rgba(34,204,144,.15);border:1px solid rgba(34,204,144,.3);
+  color:var(--teal);font-size:13px;cursor:crosshair;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .1s;font-weight:700;}
+.bn-add:hover{background:rgba(34,204,144,.3);}
+.bnode.bn-connect-target{border-color:#22cc90 !important;box-shadow:0 0 0 3px rgba(34,204,144,.3) !important;}
+/* Sidebar drag ghost */
+#bld-drag-ghost{
+  position:fixed;pointer-events:none;z-index:800;display:none;
+  background:var(--card);border:2px solid var(--accent);border-radius:6px;
+  padding:5px 12px;font-family:var(--mono);font-size:12px;color:var(--amber);
+  box-shadow:0 6px 24px rgba(0,0,0,.7);opacity:.9;white-space:nowrap;
+}
+.move-row{cursor:grab;}
+#bld-view.bld-drop-active{outline:2px dashed rgba(255,107,43,.4);}
+/* Toolbar legend */
+.bn-body{padding:6px 10px 8px;}
+.bn-frames{display:flex;gap:4px;flex-wrap:wrap;}
+.bn-f{font-family:var(--mono);font-size:10px;padding:3px 7px 2px;border-radius:3px;background:var(--dim);
+  display:flex;flex-direction:column;align-items:center;gap:1px;min-width:44px;}
+.bn-fl{font-size:7px;color:#aaaacc;letter-spacing:.5px;text-transform:uppercase;}
+.bn-fv{font-size:11px;font-weight:600;}
+.bn-tags{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px;}
+.bn-tag{font-family:var(--mono);font-size:7px;padding:1px 4px;border-radius:2px;}
+/* safety legend pill on edge label */
+.bld-safe-lbl{font-family:var(--mono);font-size:8px;}
+#bld-pick-list::-webkit-scrollbar{width:3px;}
+#bld-pick-list::-webkit-scrollbar-thumb{background:var(--dim);}
+.bpick-grp{padding:4px 10px 2px;font-family:var(--mono);font-size:8px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--dim);background:var(--card2);border-bottom:1px solid var(--border);
+  position:sticky;top:0;}
+.bpick-opt{padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border);transition:background .1s;}
+.bpick-opt:hover{background:var(--card2);}
+.bpick-cmd{font-family:var(--mono);font-size:11px;color:var(--amber);min-width:80px;}
+.bpick-name{font-size:10px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bpick-blk{font-size:10px;font-weight:700;min-width:36px;text-align:right;}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- HOVER TOOLTIP -->
+<div id="preview-tt">
+  <div class="pt-video" id="pt-video-area"></div>
+  <div class="pt-body">
+    <div class="pt-name" id="pt-name">—</div>
+    <div class="pt-fgrid" id="pt-fgrid"></div>
+    <div class="pt-tags" id="pt-tags"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div id="hdr">
+  <div class="logo">
+    <div class="logo-hex">L</div>
+    LARS <span>T8</span>
+    <span class="v3badge">v5.0</span>
+  </div>
+  <div class="tabs">
+    <div class="tab active" id="tab-guide" onclick="switchTab('guide')">
+      <span class="tab-icon">📋</span> Frame Data
+    </div>
+    <div class="tab" id="tab-tree" onclick="switchTab('tree')">
+      <span class="tab-icon">🌿</span> Árbol de decisiones
+    </div>
+    <div class="tab" id="tab-builder" onclick="switchTab('builder')">
+      <span class="tab-icon">🔨</span> Constructor
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- SIDEBAR (shared) -->
+  <div id="sidebar">
+    <div class="sb-search">
+      <input id="search-inp" type="text" placeholder="buscar move... ej: DEN, ws, SEN" oninput="filterMoves(this.value)" spellcheck="false">
+    </div>
+    <div class="move-list" id="move-list"></div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content">
+
+    <!-- GUIDE VIEW -->
+    <div id="guide-view" style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+      <div id="move-detail">
+        <div class="empty-state">
+          <div class="empty-icon">⚡</div>
+          <div class="empty-h">Selecciona un move</div>
+          <div class="empty-p">Elige cualquier move del panel izquierdo para ver sus frames, video y mejores continuaciones.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TREE VIEW -->
+    <div id="tree-view">
+      <div id="tree-toolbar">
+        <select class="tree-select" id="tree-root-sel" onchange="buildTree(this.value)">
+          <optgroup label="── Gameplan ──">
+          <option value="neutral">Neutral / Pressure</option>
+          <option value="sen">SEN mix</option>
+          <option value="den">DEN mix</option>
+          <option value="heat">Heat activo</option>
+          </optgroup>
+          <optgroup label="── Situacional ──">
+          <option value="punish">Punishes</option>
+          <option value="oki">Oki / Post-KD</option>
+          <option value="rival_crouch">Rival en crouch</option>
+          <option value="rival_pressures">Rival presiona / me atacan</option>
+          <option value="wall">Cerca de la pared</option>
+          <option value="ws">Desde while standing</option>
+          <option value="ch">Counter hit confirmado</option>
+          <option value="low_parry">Tras low parry</option>
+          <option value="sidestep">Desde sidestep</option>
+          <option value="rival_rage">Rival con Rage activo</option>
+          </optgroup>
+        </select>
+        <div class="tree-ctrl" onclick="tAutoLayout()">⟳ Auto layout</div>
+        <div class="tree-ctrl" onclick="tExpandAll()">Expandir todo</div>
+        <div class="tree-ctrl" onclick="tCollapseAll()">Colapsar</div>
+        <div class="tree-ctrl" onclick="tReset()">⌖ Reset</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--dim);text-align:right">
+          Drag nodos · Scroll zoom<br>Click = detalle en guía
+        </div>
+      </div>
+      <div id="tree-canvas">
+        <svg id="tree-svg"></svg>
+      </div>
+      <div id="minimap"><canvas id="mm-canvas" width="300" height="180"></canvas></div>
+    </div>
+
+    <!-- BUILDER VIEW -->
+    <div id="builder-view" style="display:none;flex:1;overflow:hidden;position:relative;flex-direction:row;">
+
+      <!-- Builder sidebar: move list + saved combos -->
+      <div id="bld-sidebar" style="
+        width:240px;flex-shrink:0;border-right:1px solid var(--border);
+        display:flex;flex-direction:column;overflow:hidden;
+      ">
+        <!-- Move search -->
+        <div style="padding:8px;border-bottom:1px solid var(--border);">
+          <input id="bld-root-search" type="text" placeholder="buscar move inicial…"
+            style="width:100%;background:var(--bg);border:1px solid var(--border2);color:var(--text);
+            font-family:var(--mono);font-size:11px;padding:6px 10px;border-radius:4px;outline:none;"
+            oninput="bldRootFilter(this.value)" spellcheck="false">
+        </div>
+        <div style="padding:5px 10px 4px;font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:1px;border-bottom:1px solid var(--border);background:var(--card2);">
+          <span id="bld-sidebar-hint">CLICK PARA INICIAR ÁRBOL</span>
+        </div>
+        <div class="move-list" id="bld-root-list" style="flex:1;overflow-y:auto;min-height:0;"></div>
+
+        <!-- Saved combos section -->
+        <div style="border-top:2px solid var(--border2);flex-shrink:0;display:flex;flex-direction:column;max-height:45%;">
+          <div style="padding:5px 10px 4px;font-family:var(--mono);font-size:8px;letter-spacing:1px;
+            background:var(--card2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;">
+            <span style="color:var(--teal);flex:1;">💾 COMBOS GUARDADOS</span>
+            <span id="bld-save-count" style="color:var(--dim);font-size:7px;"></span>
+          </div>
+          <div id="bld-saved-list" style="overflow-y:auto;flex:1;"></div>
+          <div style="padding:6px 8px;border-top:1px solid var(--border);background:var(--card2);display:flex;flex-direction:column;gap:4px;">
+            <button onclick="bldSaveCombo()" style="
+              width:100%;background:rgba(34,204,144,.12);border:1px solid rgba(34,204,144,.3);
+              color:var(--teal);font-family:var(--mono);font-size:10px;letter-spacing:1px;
+              padding:5px;border-radius:4px;cursor:pointer;transition:all .15s;
+            " onmouseover="this.style.background='rgba(34,204,144,.22)'" onmouseout="this.style.background='rgba(34,204,144,.12)'">
+              ＋ GUARDAR ÁRBOL ACTUAL
+            </button>
+            <button onclick="if(confirm('¿Limpiar el canvas?')){ bldClearCanvas(); activeSavedId=null; renderSavedList(); }" style="
+              width:100%;background:rgba(255,80,80,.08);border:1px solid rgba(255,80,80,.25);
+              color:#ff6060;font-family:var(--mono);font-size:10px;letter-spacing:1px;
+              padding:5px;border-radius:4px;cursor:pointer;transition:all .15s;
+            " onmouseover="this.style.background='rgba(255,80,80,.18)'" onmouseout="this.style.background='rgba(255,80,80,.08)'">
+              ◻ NUEVO
+            </button>
+            <button id="bld-update-btn" onclick="bldUpdateCombo()" style="
+              display:none;width:100%;background:rgba(160,144,255,.12);border:1px solid rgba(160,144,255,.3);
+              color:var(--purple);font-family:var(--mono);font-size:10px;letter-spacing:1px;
+              padding:5px;border-radius:4px;cursor:pointer;transition:all .15s;
+            " onmouseover="this.style.background='rgba(160,144,255,.22)'" onmouseout="this.style.background='rgba(160,144,255,.12)'">
+              ↺ ACTUALIZAR COMBO ACTUAL
+            </button>
+            <div style="display:flex;gap:4px;">
+              <button onclick="bldExportCombos()" style="
+                flex:1;background:rgba(96,170,255,.1);border:1px solid rgba(96,170,255,.3);
+                color:var(--blue);font-family:var(--mono);font-size:9px;letter-spacing:1px;
+                padding:4px;border-radius:4px;cursor:pointer;transition:all .15s;
+              " onmouseover="this.style.background='rgba(96,170,255,.2)'" onmouseout="this.style.background='rgba(96,170,255,.1)'">
+                ↓ EXPORTAR JSON
+              </button>
+              <button onclick="bldImportCombos()" style="
+                flex:1;background:rgba(255,184,48,.1);border:1px solid rgba(255,184,48,.3);
+                color:var(--amber);font-family:var(--mono);font-size:9px;letter-spacing:1px;
+                padding:4px;border-radius:4px;cursor:pointer;transition:all .15s;
+              " onmouseover="this.style.background='rgba(255,184,48,.2)'" onmouseout="this.style.background='rgba(255,184,48,.1)'">
+                ↑ IMPORTAR JSON
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Builder right: toolbar + canvas -->
+      <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+
+        <!-- Toolbar -->
+        <div style="
+          height:38px;display:flex;align-items:center;gap:8px;padding:0 12px;
+          background:rgba(14,14,26,.98);border-bottom:1px solid var(--border2);flex-shrink:0;
+        ">
+          <span style="font-family:var(--mono);font-size:9px;color:var(--dim);white-space:nowrap;">
+            Click <span style="color:var(--teal)">＋</span> en un nodo para agregar siguiente move
+          </span>
+          <div style="margin-left:auto;display:flex;gap:6px;">
+            <div class="tree-ctrl" onclick="bldAddNote()" title="Añadir cuadro de comentario">💬 Nota</div>
+            <div class="tree-ctrl" onclick="bldAutoLayout()">⟳ Layout</div>
+            <div class="tree-ctrl" onclick="bldReset()">🗑 Limpiar</div>
+            <div class="tree-ctrl" onclick="bldZoomReset()">⌖ Reset vista</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-left:8px;font-family:var(--mono);font-size:9px;color:var(--dim);white-space:nowrap;">
+            <span><span style="display:inline-block;width:18px;height:2px;background:#22cc90;vertical-align:middle;margin-right:4px;border-radius:1px;"></span>Ininterrumpible</span>
+            <span><span style="display:inline-block;width:18px;height:2px;background:#22cc90;vertical-align:middle;margin-right:4px;border-radius:1px;"></span>Seguro (≤ +10)</span>
+            <span><span style="display:inline-block;width:18px;height:2px;background:#ff5060;vertical-align:middle;margin-right:4px;border-radius:1px;"></span>No seguro (&gt; +10)</span>
+          </div>
+        </div>
+
+        <!-- Canvas area -->
+        <div id="bld-view" style="flex:1;overflow:hidden;position:relative;cursor:grab;">
+          <div id="bld-canvas" style="position:absolute;top:0;left:0;transform-origin:0 0;">
+            <svg id="bld-svg" style="position:absolute;top:0;left:0;pointer-events:none;overflow:visible;"></svg>
+          </div>
+          <div id="bld-empty" style="
+            position:absolute;inset:0;display:flex;flex-direction:column;
+            align-items:center;justify-content:center;gap:14px;color:var(--dim);pointer-events:none;
+          ">
+            <div style="font-size:42px;opacity:.2;">🔨</div>
+            <div style="font-family:var(--head);font-size:16px;color:var(--muted);">Constructor de árbol libre</div>
+            <div style="font-size:12px;text-align:center;max-width:340px;line-height:1.7;">
+              Selecciona el move inicial desde el panel izquierdo.<br>
+              Luego usa <strong style="color:var(--teal)">＋</strong> en cada nodo para agregar siguientes moves.<br>
+              La conexión muestra si el siguiente move es <strong style="color:#22cc90">seguro</strong> o <strong style="color:#ff5060">punible</strong> en bloqueo.
+            </div>
+          </div>
+          <!-- Move picker popup -->
+          <div id="bld-picker" style="display:none;position:fixed;z-index:500;width:280px;
+            background:var(--card);border:1px solid var(--border2);border-radius:8px;
+            box-shadow:0 10px 32px rgba(0,0,0,.8);overflow:hidden;">
+            <div style="padding:8px 10px;border-bottom:1px solid var(--border);background:var(--card2);display:flex;align-items:center;gap:8px;">
+              <span style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;white-space:nowrap;">AGREGAR MOVE:</span>
+              <input id="bld-pick-inp" type="text" placeholder="buscar…"
+                style="flex:1;background:var(--bg);border:1px solid var(--border2);color:var(--text);
+                font-family:var(--mono);font-size:11px;padding:4px 8px;border-radius:3px;outline:none;"
+                oninput="bldPickFilter(this.value)"
+                autocomplete="off" spellcheck="false">
+              <button onclick="hidePicker()" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px;padding:2px 4px;">✕</button>
+            </div>
+            <div id="bld-pick-list" style="max-height:320px;overflow-y:auto;"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Save name dialog -->
+<div id="bld-name-overlay">
+  <div id="bld-name-dialog">
+    <h3>💾 Guardar árbol</h3>
+    <input id="bld-name-inp" type="text" placeholder="Nombre del combo (ej: df+2 SEN mix)" maxlength="60" spellcheck="false">
+    <div class="bld-dlg-btns">
+      <button class="bld-dlg-btn bld-dlg-cancel" onclick="bldNameCancel()">Cancelar</button>
+      <button class="bld-dlg-btn bld-dlg-ok" onclick="bldNameConfirm()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Situation picker dialog -->
+<div id="bld-sit-overlay">
+  <div id="bld-sit-dialog">
+    <div id="bld-sit-header">
+      <div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:4px;">CONECTAR DESPUÉS DE</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span id="bld-sit-origin" style="font-family:var(--mono);font-size:16px;color:var(--amber);"></span>
+          <span style="color:var(--dim);font-size:12px;">→</span>
+          <span id="bld-sit-next" style="font-family:var(--mono);font-size:16px;color:var(--teal);"></span>
+        </div>
+      </div>
+      <button onclick="hideSitPicker()" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:18px;padding:4px;align-self:flex-start;">✕</button>
+    </div>
+    <div style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:8px;">ELIGE LA SITUACIÓN EN LA QUE CONECTA:</div>
+    <div id="bld-sit-options" style="display:flex;flex-direction:column;gap:6px;"></div>
+  </div>
+</div>
+
+<!-- Drag ghost from sidebar -->
+<div id="bld-drag-ghost"></div>
+<!-- Hidden file input for combo import -->
+<input type="file" id="bld-import-input" accept=".json" style="display:none" onchange="bldImportFile(event)">
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// MOVE DATA — Season 3 v5.0 (TekkenDocs 3.00.02 — Abril 2026)
+// ═══════════════════════════════════════════════════════════
+const MOVES = {
+// ── Pokes ──
+"1":          {cmd:"1",         name:"Jab",                  grp:"Pokes",      startup:"i10",   block:"+1",  hit:"+8",    ch:"+8",    lvl:"h",    dmg:5,  risk:"safe",   tags:["HIGH"],                color:"#60aaff"},
+"2":          {cmd:"2",         name:"Right jab",            grp:"Pokes",      startup:"i10",   block:"+0",  hit:"+8",    ch:"+8",    lvl:"h",    dmg:10, risk:"safe",   tags:["HIGH"],                color:"#60aaff"},
+"3":          {cmd:"3",         name:"Kick → LEN",           grp:"Pokes",      startup:"i15",   block:"-17", hit:"+0",    ch:"+0",    lvl:"h",    dmg:16, risk:"punible",tags:["HIGH"],                color:"#9090b0"},
+"4":          {cmd:"4",         name:"High kick",            grp:"Pokes",      startup:"i17~18",block:"-7",  hit:"+18",   ch:"+18",   lvl:"h",    dmg:27, risk:"safe",   tags:["HIGH"],                color:"#60aaff"},
+"1,1":        {cmd:"1,1",       name:"Jab CH string",        grp:"Pokes",      startup:"i10",   block:"-8",  hit:"+0",    ch:"+0",    lvl:"h,m",  dmg:13, risk:"safe",   tags:["HIGH","MID"],          color:"#60aaff"},
+"1,2":        {cmd:"1,2",       name:"Jab jail",             grp:"Pokes",      startup:"i10",   block:"-3",  hit:"+8",    ch:"+8",    lvl:"h,h",  dmg:14, risk:"safe",   tags:["HIGH","JAIL"],         color:"#60aaff"},
+"1,4":        {cmd:"1,4",       name:"Jab low ext",          grp:"Pokes",      startup:"i10",   block:"-12", hit:"+1",    ch:"+1",    lvl:"h,l",  dmg:15, risk:"punible",tags:["HIGH","LOW"],          color:"#ffb830"},
+"1,1,1":      {cmd:"1,1,1",     name:"Heat Engager string",  grp:"Pokes",      startup:"i10",   block:"-12", hit:"+17a",  ch:"+17a",  lvl:"h,m,m",dmg:33, risk:"punible",tags:["HEAT","MID"],         color:"#ff6b2b"},
+"df+1":       {cmd:"df+1",      name:"Generic mid poke",     grp:"Pokes",      startup:"i13",   block:"-3",  hit:"+5",    ch:"+5",    lvl:"m",    dmg:12, risk:"safe",   tags:["MID"],                 color:"#60aaff"},
+"df+1,1":     {cmd:"df+1,1",    name:"Mid-high → DEN",       grp:"Pokes",      startup:"i13",   block:"-6",  hit:"+6",    ch:"+6",    lvl:"m,h",  dmg:24, risk:"safe",   tags:["MID"],                 color:"#60aaff",
+  notes:["Como PUNISH: hold D en el 2do hit transiciona a DEN con +10 → mixup muy sólido e ininterrumpible","El 2do hit (h) puede ser evadido agachándose; alternar con df+1,3 (mid-mid, -12) como check para quienes duckan","df+1,3 en la pared hace wall splat para combo","df+1,1,3: solo útil si el rival no respeta el 2do hit — el 3 es garantizado en CH del 2do hit"]},
+"df+1,1,3":   {cmd:"df+1,1,3",  name:"Wall splat string",    grp:"Pokes",      startup:"i13",   block:"-12", hit:"+15c",  ch:"+15c",  lvl:"m,h,m",dmg:49, risk:"punible",tags:["MID"],                color:"#60aaff"},
+"df+1,3":     {cmd:"df+1,3",    name:"Mid-mid anti-duck",    grp:"Pokes",      startup:"i13",   block:"-12", hit:"+13a",  ch:"+13a",  lvl:"m,m",  dmg:32, risk:"punible",tags:["MID"],                 color:"#60aaff"},
+"df+2":       {cmd:"df+2",      name:"Elbow → SEN",          grp:"Pokes",      startup:"i14",   block:"-3",  hit:"+9",    ch:"+13c",  lvl:"m",    dmg:15, risk:"safe",   tags:["MID","SAFE","ELBOW"],  color:"#22cc90"},
+"df+3":       {cmd:"df+3",      name:"Mid → DEN",            grp:"Pokes",      startup:"i16",   block:"-11", hit:"+8",    ch:"+8",    lvl:"m",    dmg:15, risk:"safe",   tags:["MID"],                 color:"#60aaff"},
+"df+3,3":     {cmd:"df+3,3",    name:"Mid combo carry",      grp:"Pokes",      startup:"i16",   block:"-15", hit:"+29a",  ch:"+29a",  lvl:"m,m",  dmg:39, risk:"punible",tags:["MID","LAUNCH"],        color:"#ff6b2b"},
+"df+4":       {cmd:"df+4",      name:"Mid kick",             grp:"Pokes",      startup:"i15~16",block:"-8",  hit:"+2",    ch:"+2",    lvl:"m",    dmg:16, risk:"safe",   tags:["MID"],                 color:"#60aaff"},
+"b+1":        {cmd:"b+1",       name:"Homing mid",           grp:"Pokes",      startup:"i15~17",block:"-9",  hit:"+4",    ch:"+14a",  lvl:"m",    dmg:17, risk:"safe",   tags:["MID","HOMING"],        color:"#60aaff"},
+"b+2":        {cmd:"b+2",       name:"Mid poke",             grp:"Pokes",      startup:"i15",   block:"-7",  hit:"+4",    ch:"+4",    lvl:"m",    dmg:12, risk:"safe",   tags:["MID"],                 color:"#60aaff"},
+"b+2,1":      {cmd:"b+2,1",     name:"CH launch string",     grp:"Pokes",      startup:"i15",   block:"-10", hit:"+4",    ch:"+32a",  lvl:"m,m",  dmg:29, risk:"safe",   tags:["MID"],                 color:"#60aaff"},
+"b+2,3":      {cmd:"b+2,3",     name:"Tornado Balcony Brk",  grp:"Pokes",      startup:"i15",   block:"-8",  hit:"+38d",  ch:"+38d",  lvl:"m,h",  dmg:33, risk:"safe",   tags:["MID","TORNADO"],       color:"#22cc90"},
+"b+3":        {cmd:"b+3",       name:"Mid → SEN",            grp:"Pokes",      startup:"i17",   block:"-12", hit:"+4",    ch:"+4",    lvl:"m",    dmg:14, risk:"punible",tags:["MID"],                 color:"#60aaff"},
+"b+3,4":      {cmd:"b+3,4",     name:"Whiff punish range",   grp:"Pokes",      startup:"i17",   block:"-8",  hit:"+19",   ch:"+19",   lvl:"m,h",  dmg:34, risk:"safe",   tags:["MID"],                 color:"#60aaff"},
+"b+4":        {cmd:"b+4",       name:"Knee mid",             grp:"Pokes",      startup:"i15",   block:"-8",  hit:"+8",    ch:"+8",    lvl:"m",    dmg:23, risk:"safe",   tags:["MID","KNEE"],          color:"#60aaff"},
+"b+1+2":      {cmd:"b+1+2",     name:"Homing mid double",    grp:"Pokes",      startup:"i21~22",block:"-9",  hit:"+9",    ch:"+9",    lvl:"m",    dmg:24, risk:"safe",   tags:["MID","HOMING"],        color:"#60aaff"},
+"d+2":        {cmd:"d+2",       name:"Elbow → Spike",        grp:"Pokes",      startup:"i18~19",block:"+0c", hit:"+8c",   ch:"+30d",  lvl:"m",    dmg:17, risk:"safe",   tags:["MID","SPIKE","ELBOW"], color:"#22cc90",
+  notes:["CH da +30d con Spike","Transiciona a FC con D"]},
+"db+2":       {cmd:"db+2",      name:"Mid → SEN",            grp:"Pokes",      startup:"i15",   block:"-8",  hit:"+3",    ch:"+3",    lvl:"m",    dmg:12, risk:"safe",   tags:["MID"],                 color:"#60aaff"},
+"db+2,1":     {cmd:"db+2,1",    name:"Double mid",           grp:"Pokes",      startup:"i15",   block:"-8",  hit:"+6",    ch:"+6",    lvl:"m,m",  dmg:20, risk:"safe",   tags:["MID"],                 color:"#60aaff"},
+"db+2,3":     {cmd:"db+2,3",    name:"Mid Tornado wall",     grp:"Pokes",      startup:"i15",   block:"-13", hit:"+8",    ch:"+8",    lvl:"m,m",  dmg:27, risk:"punible",tags:["MID","TORNADO"],       color:"#22cc90"},
+"db+2,3*":    {cmd:"db+2,3*",   name:"Charged Tornado",      grp:"Pokes",      startup:"i15",   block:"+13", hit:"+24d",  ch:"+24d",  lvl:"m,m",  dmg:37, risk:"safe",   tags:["MID","TORNADO"],       color:"#22cc90"},
+"db+1+2":     {cmd:"db+1+2",    name:"Backsway → DEN",       grp:"Pokes",      startup:"i26",   block:"-13", hit:"+8",    ch:"+8",    lvl:"m",    dmg:12, risk:"punible",tags:["MID"],                 color:"#60aaff"},
+"SS.2":       {cmd:"SS.2",      name:"SS mid KND",           grp:"Pokes",      startup:"i16~17",block:"-7",  hit:"+22d",  ch:"+22d",  lvl:"m",    dmg:20, risk:"safe",   tags:["MID"],                 color:"#60aaff"},
+"1+2":        {cmd:"1+2",       name:"Power crush mid",      grp:"Pokes",      startup:"i25",   block:"-12", hit:"+7",    ch:"+7",    lvl:"m",    dmg:25, risk:"punible",tags:["MID","PC"],             color:"#ffb830"},
+"uf+1":       {cmd:"uf+1",      name:"Mid-mid → LEN",        grp:"Pokes",      startup:"i15,i25",block:"-12", hit:"+3",    ch:"+3",    lvl:"m,m",  dmg:30, risk:"punible",tags:["MID"],                 color:"#22cc90",
+  notes:["Cancel 2do hit con B: -12/-5","Transición a LEN +3 en hit con D"]},
+// ── Lows ──
+"d+3":        {cmd:"d+3",       name:"Low kick",             grp:"Lows",       startup:"i15",   block:"-14", hit:"-3",    ch:"-3",    lvl:"l",    dmg:8,  risk:"punible",tags:["LOW"],                 color:"#ffb830"},
+"d+3,1":      {cmd:"d+3,1",     name:"Low → high string",    grp:"Lows",       startup:"i15",   block:"-7",  hit:"+4",    ch:"+4",    lvl:"l,h",  dmg:22, risk:"safe",   tags:["LOW"],                 color:"#ffb830"},
+"d+1+2":      {cmd:"d+1+2",     name:"Low high crush",       grp:"Lows",       startup:"i24~25",block:"-20", hit:"+9d",   ch:"+9d",   lvl:"l",    dmg:25, risk:"punible",tags:["LOW"],                 color:"#ffb830"},
+"db+1":       {cmd:"db+1",      name:"Low poke",             grp:"Lows",       startup:"i17",   block:"-12", hit:"-1",    ch:"-1",    lvl:"l",    dmg:9,  risk:"punible",tags:["LOW"],                 color:"#ffb830"},
+"db+1,3":     {cmd:"db+1,3",    name:"Low-high → LEN",       grp:"Lows",       startup:"i17",   block:"-12", hit:"-1",    ch:"-1",    lvl:"l,h",  dmg:19, risk:"punible",tags:["LOW"],                 color:"#ffb830"},
+"db+4":       {cmd:"db+4",      name:"Iconic low +5c",       grp:"Lows",       startup:"i20~21",block:"-26", hit:"+5c",   ch:"+29a",  lvl:"l",    dmg:19, risk:"punible",tags:["LOW"],                 color:"#ffb830"},
+"f,F+4":      {cmd:"f,F+4",     name:"Low hellsweep",        grp:"Lows",       startup:"i21",   block:"-31", hit:"+5",    ch:"+5",    lvl:"l",    dmg:12, risk:"punible",tags:["LOW"],                 color:"#ffb830"},
+"f,F+4,2":    {cmd:"f,F+4,2",   name:"Hellsweep → DEN",      grp:"Lows",       startup:"i21",   block:"-7",  hit:"+11",   ch:"+11",   lvl:"l,h",  dmg:27, risk:"safe",   tags:["LOW"],                 color:"#ffb830",
+  notes:["Da frames positivos en DEN → presión fuerte y segura","Preferir esta versión para mantener presión después del hellsweep","vs f,F+4,3: más daño pero deja en -3, sin mixup — usar si quieres el daño sin follow-up"]},
+"f,F+4,3":    {cmd:"f,F+4,3",   name:"Hellsweep low ext",    grp:"Lows",       startup:"i21",   block:"-16", hit:"-3",    ch:"-3",    lvl:"l,m",  dmg:32, risk:"punible",tags:["LOW"],                 color:"#ffb830"},
+"f,F+3+4":    {cmd:"f,F+3+4",   name:"Double low high crush",grp:"Lows",       startup:"i19~20",block:"-16", hit:"+0c",   ch:"+0c",   lvl:"l,l",  dmg:26, risk:"punible",tags:["LOW"],                 color:"#ffb830"},
+"hFC.1+2":    {cmd:"hFC.1+2",   name:"Double Smack (FC)",    grp:"Lows",       startup:"i18",   block:"-12", hit:"+1c",   ch:"+1c",   lvl:"l,l",  dmg:24, risk:"punible",tags:["LOW"],                 color:"#ffb830",
+  notes:["Transición a LEN en hit con input n,D (+3c)","Se puede hacer desde Crouch Level 1","High crush desde frame 1"]},
+// ── Pressure ──
+"f+1":        {cmd:"f+1",       name:"High poke",            grp:"Pressure",   startup:"i13",   block:"-5",  hit:"+6",    ch:"+6",    lvl:"h",    dmg:10, risk:"safe",   tags:["HIGH"],                color:"#22cc90"},
+"f+3":        {cmd:"f+3",       name:"Transición → DEN",      grp:"Pokes",      startup:"—",     block:"—",   hit:"—",     ch:"—",     lvl:"sp",   dmg:0,  risk:"safe",   tags:[],                      color:"#ffb830",
+  notes:["Entra directo a DEN sin atacar","Punto de entrada para todo el mixup de DEN"]},
+"f+1,2":      {cmd:"f+1,2",    name:"Jail → SEN",           grp:"Pressure",   startup:"i13",   block:"-5",  hit:"+6",    ch:"+6",    lvl:"h,m",  dmg:21, risk:"safe",   tags:["HIGH","MID","JAIL"],   color:"#22cc90"},
+"f+1,2,3":    {cmd:"f+1,2,3",   name:"3-hit → DEN",          grp:"Pressure",   startup:"i13",   block:"-5",  hit:"+22c",  ch:"+49a",  lvl:"h,m,m",dmg:41, risk:"safe",   tags:["MID"],                color:"#22cc90"},
+"f+2":        {cmd:"f+2",       name:"High poke i12",        grp:"Pressure",   startup:"i12",   block:"-6",  hit:"+3",    ch:"+3",    lvl:"h",    dmg:10, risk:"safe",   tags:["HIGH"],                color:"#22cc90"},
+"f+2,1":      {cmd:"f+2,1",     name:"Jail → SEN",           grp:"Pressure",   startup:"i12",   block:"-5",  hit:"+6",    ch:"+6",    lvl:"h,h",  dmg:25, risk:"safe",   tags:["HIGH","JAIL"],         color:"#22cc90"},
+"f+4":        {cmd:"f+4",       name:"Knee mid i17",         grp:"Pressure",   startup:"i17",   block:"-9",  hit:"+7",    ch:"+7",    lvl:"m",    dmg:12, risk:"safe",   tags:["MID","KNEE"],          color:"#22cc90"},
+"f+4,1":      {cmd:"f+4,1",     name:"Knee mid string",      grp:"Pressure",   startup:"i17",   block:"-9",  hit:"+2",    ch:"+2",    lvl:"m,m",  dmg:20, risk:"safe",   tags:["MID","KNEE"],          color:"#22cc90"},
+"f+4,1,2":    {cmd:"f+4,1,2",   name:"Knee 3-hit",           grp:"Pressure",   startup:"i17",   block:"-10", hit:"+2",    ch:"+2",    lvl:"m,m,m",dmg:28, risk:"punible",tags:["MID","KNEE"],         color:"#ffb830"},
+"f+4,1,2,1":  {cmd:"f+4,1,2,1", name:"Knee 4-hit Balcony Brk",grp:"Pressure",  startup:"i17",   block:"-14", hit:"+19",   ch:"+19",   lvl:"m,m,m,m",dmg:48,risk:"punible",tags:["MID","KNEE"],      color:"#ff6b2b"},
+"f,f,F+1":    {cmd:"f,f,F+1",   name:"Running Tailspin +4",  grp:"Pressure",   startup:"i18~20",block:"+4",  hit:"+36a",  ch:"+36a",  lvl:"h",    dmg:23, risk:"safe",   tags:["HIGH","HOMING"],       color:"#22cc90"},
+"f,f,F+3":    {cmd:"f,f,F+3",   name:"Slash kick +6 bloq",   grp:"Pressure",   startup:"i20~26",block:"+6",  hit:"+15a",  ch:"+15a",  lvl:"m",    dmg:30, risk:"safe",   tags:["MID"],                 color:"#22cc90"},
+// ── Launchers ──
+"f+1+2":      {cmd:"f+1+2",     name:"Launch punish i15",    grp:"Launchers",  startup:"i15~16",block:"-13", hit:"+28",   ch:"+28",   lvl:"m",    dmg:20, risk:"punible",tags:["MID","LAUNCH"],        color:"#ff6b2b"},
+"f+1+4":      {cmd:"f+1+4",     name:"Wall break shoulder",  grp:"Launchers",  startup:"i13~14",block:"-18", hit:"+18",   ch:"+18",   lvl:"m",    dmg:28, risk:"punible",tags:["MID","SHOULDER"],      color:"#ff6b2b"},
+"uf+3":       {cmd:"uf+3",      name:"High crush launcher",  grp:"Launchers",  startup:"i16~17",block:"-26", hit:"+33a",  ch:"+33a",  lvl:"m",    dmg:26, risk:"punible",tags:["MID","LAUNCH"],        color:"#ff6b2b"},
+"uf+4":       {cmd:"uf+4",      name:"Evasive mid launch",   grp:"Launchers",  startup:"i25~27",block:"-8",  hit:"+42a",  ch:"+42a",  lvl:"m",    dmg:20, risk:"safe",   tags:["MID","LAUNCH"],        color:"#ff6b2b"},
+"f,F+2":      {cmd:"f,F+2",     name:"Tornado → SEN",        grp:"Launchers",  startup:"i21~22",block:"-13", hit:"+35a",  ch:"+35a",  lvl:"m",    dmg:20, risk:"punible",tags:["MID","TORNADO"],       color:"#ff6b2b"},
+"uf,n,4":     {cmd:"uf,n,4",    name:"Low crush mid",        grp:"Launchers",  startup:"i23~25",block:"-13", hit:"+32a",  ch:"+32a",  lvl:"m",    dmg:20, risk:"punible",tags:["MID","LAUNCH"],        color:"#ff6b2b"},
+// ── Punishes ──
+"2,1":        {cmd:"2,1",       name:"i10 punish → LEN",     grp:"Punishes",   startup:"i10",   block:"-6",  hit:"+8",    ch:"+8",    lvl:"h,m",  dmg:22, risk:"safe",   tags:["MID"],                 color:"#22cc90"},
+"f+2,4":      {cmd:"f+2,4",     name:"i12 punish damage",    grp:"Punishes",   startup:"i12",   block:"-12", hit:"+15",   ch:"+15",   lvl:"h,h",  dmg:32, risk:"punible",tags:["HIGH"],                color:"#ff6b2b"},
+"f,n,b+2":    {cmd:"f,n,b+2",   name:"Mid i14 (-12 bloq)",   grp:"Punishes",   startup:"i14",   block:"-12", hit:"+0",    ch:"+0",    lvl:"m",    dmg:10, risk:"punible",tags:["MID"],                 color:"#60aaff"},
+"f,n,b+2,1":  {cmd:"f,n,b+2,1", name:"BEST launcher i14",    grp:"Launchers",  startup:"i14",   block:"-18", hit:"+47a",  ch:"+47a",  lvl:"m,m",  dmg:20, risk:"punible",tags:["MID","LAUNCH"],        color:"#ff6b2b"},
+"f,F+1+2":    {cmd:"f,F+1+2",   name:"Elbow Balcony Brk",    grp:"Punishes",   startup:"i16~17",block:"-9",  hit:"+14",   ch:"+59a",  lvl:"m",    dmg:20, risk:"safe",   tags:["MID","ELBOW"],         color:"#22cc90"},
+"3+4":        {cmd:"3+4",       name:"Heat Engager kick",    grp:"Punishes",   startup:"i17~18",block:"-8",  hit:"+17d",  ch:"+17d",  lvl:"m",    dmg:22, risk:"safe",   tags:["MID","HEAT"],          color:"#22cc90"},
+"b+4,1+2":   {cmd:"b+4,1+2",  name:"Knee attack throw",    grp:"Punishes",   startup:"i15",   block:"0",   hit:"+0",    ch:"+0",    lvl:"m,t",  dmg:30, risk:"safe",   tags:["MID","KNEE"],          color:"#22cc90",
+  notes:["Knee + attack throw a i15f — seguro en bloqueo","Excelente contra la mayoría de parries: el throw escapa el parry del rival","Mid falso: si el primer hit (knee) conecta, el throw es garantizado","Buena herramienta vs rivales que abusan de low parry o armor"]},
+// ── WS Punishes ──
+"ws1":        {cmd:"ws1",       name:"WS Tornado launcher",  grp:"WS Punishes",startup:"i15~16",block:"-12", hit:"+38a",  ch:"+38a",  lvl:"m",    dmg:16, risk:"punible",tags:["MID","LAUNCH","TORNADO"],color:"#ff6b2b"},
+"ws2":        {cmd:"ws2",       name:"WS → DEN/SEN",         grp:"WS Punishes",startup:"i13~14",block:"-8",  hit:"+3",    ch:"+3",    lvl:"m",    dmg:13, risk:"safe",   tags:["MID"],                 color:"#60aaff"},
+"ws2,1":      {cmd:"ws2,1",     name:"WS mid-mid",           grp:"WS Punishes",startup:"i13~14",block:"-12", hit:"+2c",   ch:"+4d",   lvl:"m,m",  dmg:30, risk:"punible",tags:["MID"],                 color:"#ff6b2b"},
+"ws2,3":      {cmd:"ws2,3",     name:"WS optimal punish",    grp:"WS Punishes",startup:"i13~14",block:"-15", hit:"-3",    ch:"-3",    lvl:"m,h",  dmg:33, risk:"punible",tags:["MID","TORNADO"],       color:"#ff6b2b"},
+"ws3":        {cmd:"ws3",       name:"WS launch vs hellsweep",grp:"WS Punishes",startup:"i20",  block:"+0",  hit:"+21",   ch:"+21",   lvl:"h",    dmg:30, risk:"safe",   tags:["HIGH"],                color:"#22cc90"},
+"ws4":        {cmd:"ws4",       name:"WS punish i11",        grp:"WS Punishes",startup:"i11~12",block:"-6",  hit:"+5",    ch:"+5",    lvl:"m",    dmg:16, risk:"safe",   tags:["MID"],                 color:"#60aaff"},
+"FC.df+2":    {cmd:"FC.df+2",   name:"FC mid CH launcher",   grp:"WS Punishes",startup:"i15~16",block:"-8",  hit:"+5",    ch:"+63a",  lvl:"m",    dmg:19, risk:"safe",   tags:["MID"],                 color:"#22cc90"},
+// ── SEN ──
+"SEN.D":      {cmd:"SEN.D",     name:"Transición DEN → SEN",  grp:"SEN",        startup:"—",     block:"—",   hit:"—",     ch:"—",     lvl:"sp",   dmg:0,  risk:"safe",   tags:[],                      color:"#22cc90",
+  notes:["Presionar F estando en DEN para entrar a SEN","Transición pura sin ataque"]},
+"SEN.1":      {cmd:"SEN.1",     name:"SEN mid Heat Engager", grp:"SEN",        startup:"i12~13",block:"-9",  hit:"+23a",  ch:"+23a",  lvl:"m",    dmg:26, risk:"punible",tags:["MID","HEAT"],          color:"#22cc90"},
+"SEN.2":      {cmd:"SEN.2",     name:"SEN low Tornado",      grp:"SEN",        startup:"i17~19",block:"-12", hit:"+6c",   ch:"+27d",  lvl:"l",    dmg:23, risk:"punible",tags:["LOW","TORNADO"],       color:"#ffb830"},
+"SEN.3":      {cmd:"SEN.3",     name:"SEN homing mid",       grp:"SEN",        startup:"i14~16",block:"-13", hit:"+29a",  ch:"+29a",  lvl:"m",    dmg:20, risk:"punible",tags:["MID","HOMING"],        color:"#ffb830"},
+"SEN.4":      {cmd:"SEN.4",     name:"SEN high +4 bloq",     grp:"SEN",        startup:"i17~18",block:"+4",  hit:"+31a",  ch:"+31a",  lvl:"h",    dmg:19, risk:"safe",   tags:["HIGH","HOMING"],       color:"#22cc90"},
+"SEN.1+2":    {cmd:"SEN.1+2",   name:"SEN power crush",      grp:"SEN",        startup:"i14~16",block:"-14", hit:"+20a",  ch:"+20a",  lvl:"m",    dmg:21, risk:"punible",tags:["MID","PC"],             color:"#ffb830"},
+"SEN.3+4":    {cmd:"SEN.3+4",   name:"SEN spike +0 bloq",    grp:"SEN",        startup:"i13~14",block:"+0c", hit:"+22d",  ch:"+22d",  lvl:"m",    dmg:22, risk:"safe",   tags:["MID","SPIKE"],         color:"#60aaff"},
+// ── DEN ──
+"DEN.1":      {cmd:"DEN.1",     name:"DEN jab +1 bloq",      grp:"DEN",        startup:"i11~12",block:"+1",  hit:"+8",    ch:"+8",    lvl:"h",    dmg:14, risk:"safe",   tags:["HIGH","ELBOW"],        color:"#60aaff"},
+"DEN.1,2":    {cmd:"DEN.1,2",   name:"DEN Heat Engager jail", grp:"DEN",       startup:"i11~12",block:"-6",  hit:"+21c",  ch:"+21c",  lvl:"h,h",  dmg:34, risk:"safe",   tags:["HEAT","JAIL"],         color:"#22cc90"},
+"DEN.2":      {cmd:"DEN.2",     name:"DEN jab evasion",      grp:"DEN",        startup:"i17~19",block:"-7",  hit:"+7",    ch:"+62a",  lvl:"m",    dmg:17, risk:"safe",   tags:["MID"],                 color:"#ffb830"},
+"uf+3+4":     {cmd:"uf+3+4",    name:"Avalanche Flip",        grp:"Launchers",  startup:"—",     block:"—",   hit:"—",     ch:"—",     lvl:"sp",   dmg:0,  risk:"safe",   tags:["LOW CRUSH"],           color:"#a090ff",
+  notes:["Low crush 11~","Accesible desde DEN.2 en hit/CH presionando UF","Base de las variantes ,4 y ,1+2"]},
+"uf+3+4,4":   {cmd:"uf+3+4,4",  name:"Avalanche → kick mid",  grp:"Launchers",  startup:"i17~18",block:"-4",  hit:"+0",    ch:"+0",    lvl:"sp,m,t",dmg:40, risk:"safe",   tags:["MID"],                 color:"#a090ff"},
+"uf+3+4,1+2": {cmd:"uf+3+4,1+2",name:"Avalanche → throw",     grp:"Launchers",  startup:"i9~11", block:"—",   hit:"+1",    ch:"+1",    lvl:"sp,t",  dmg:40, risk:"safe",   tags:["THROW"],               color:"#a090ff",
+  notes:["Throw break: 1+2"]},
+"DEN.3":      {cmd:"DEN.3",     name:"DEN homing +5 bloq",   grp:"DEN",        startup:"i22~23",block:"+5",  hit:"+5",    ch:"+5",    lvl:"m",    dmg:23, risk:"safe",   tags:["MID","HOMING","HEAT"], color:"#22cc90"},
+"DEN.4":      {cmd:"DEN.4",     name:"DEN low → LEN",        grp:"DEN",        startup:"i23~25",block:"-12", hit:"+1",    ch:"+1",    lvl:"l",    dmg:14, risk:"punible",tags:["LOW"],                 color:"#ffb830"},
+"DEN.1+2":    {cmd:"DEN.1+2",   name:"DEN Tornado",          grp:"DEN",        startup:"i12~13",block:"-1",  hit:"+29a",  ch:"+29a",  lvl:"h",    dmg:24, risk:"safe",   tags:["HIGH","TORNADO"],      color:"#ff6b2b"},
+"DEN.3+4":    {cmd:"DEN.3+4",   name:"DEN low → SEN",        grp:"DEN",        startup:"i22~23",block:"-14", hit:"-3",    ch:"+5c",   lvl:"l",    dmg:21, risk:"punible",tags:["LOW"],                 color:"#ffb830"},
+// ── LEN ──
+"LEN.1":      {cmd:"LEN.1",     name:"LEN low",              grp:"LEN",        startup:"i16~17",block:"-12", hit:"+4c",   ch:"+4c",   lvl:"l",    dmg:20, risk:"punible",tags:["LOW"],                 color:"#ffb830"},
+"LEN.2":      {cmd:"LEN.2",     name:"LEN mid Tornado",      grp:"LEN",        startup:"i16~17",block:"-9",  hit:"+25",   ch:"+25",   lvl:"m",    dmg:25, risk:"safe",   tags:["MID","TORNADO"],       color:"#22cc90"},
+// ── Heat ──
+"H.f+3+4":    {cmd:"H.f+3+4",   name:"Heat PC +5 → SEN",    grp:"Heat",       startup:"i18~24",block:"+5",  hit:"+10",   ch:"+10",   lvl:"sm",   dmg:5,  risk:"safe",   tags:["HEAT","PC"],           color:"#ff6b2b"},
+"H.SS.2":     {cmd:"H.SS.2",    name:"Heat SS +6 bloq",      grp:"Heat",       startup:"i16~17",block:"+6c", hit:"+27d",  ch:"+27d",  lvl:"m",    dmg:30, risk:"safe",   tags:["HEAT"],                color:"#ff6b2b"},
+"H.2+3":      {cmd:"H.2+3",     name:"Heat Smash",           grp:"Heat",       startup:"i18~19",block:"+12c",hit:"+0",    ch:"+81a",  lvl:"m",    dmg:55, risk:"safe",   tags:["HEAT"],                color:"#ff6b2b",
+  notes:["En bloqueo: +12c → DEN","En hit: attack throw (+0) o 2do hit (+81a)","Transition to r30 DEN on block or whiff"]},
+"H.LEN.1":    {cmd:"H.LEN.1",   name:"Heat low side switch", grp:"Heat",       startup:"i16~17",block:"-12c",hit:"+5d",   ch:"+5d",   lvl:"l,t",  dmg:35, risk:"punible",tags:["HEAT","LOW"],          color:"#ff6b2b"},
+"H.LEN.2":    {cmd:"H.LEN.2",   name:"Heat LEN Tornado",     grp:"Heat",       startup:"i16~17",block:"-9",  hit:"+65a",  ch:"+65a",  lvl:"m",    dmg:20, risk:"safe",   tags:["HEAT","TORNADO"],      color:"#ff6b2b"},
+"H.DEN.3+4":  {cmd:"H.DEN.3+4", name:"Heat DEN low 2-hit",   grp:"Heat",       startup:"i22~23",block:"-14", hit:"+21d",  ch:"+21d",  lvl:"l",    dmg:21, risk:"punible",tags:["HEAT","LOW"],          color:"#ff6b2b"},
+"R.df+1+2":   {cmd:"R.df+1+2",  name:"Rage Art",             grp:"Heat",       startup:"i20",   block:"-18", hit:"+0d",   ch:"+0d",   lvl:"m",    dmg:55, risk:"punible",tags:["PC"],                  color:"#a090ff"},
+};
+
+// Okizeme video map (CDN pattern: /lars/CMD.mp4)
+const BASE_VID = "https://okizeme.b-cdn.net/lars/";
+function vidUrl(cmd){ return BASE_VID + encodeURIComponent(cmd) + ".mp4"; }
+const VIDS = {};
+Object.keys(MOVES).forEach(k => { VIDS[k] = vidUrl(k); });
+// TekkenDocs video overrides
+const VIDS_OVERRIDE = {
+  "uf+1":     "https://tekkendocs.b-cdn.net/t8/videos/lars/t8-p2-lars-uf+1-426.mp4",
+  "uf+3+4":   "https://okizeme.b-cdn.net/lars/uf+3+4.mp4",
+  "uf+3+4,4": "https://okizeme.b-cdn.net/lars/uf+3+4,4.mp4",
+  "uf+3+4,1+2":"https://okizeme.b-cdn.net/lars/uf+3+4,1+2.mp4",
+  "SEN.D":    "https://tekkendocs.b-cdn.net/t8/videos/lars/t8-p2-lars-sen.d-426.mp4",
+  "hFC.1+2":  "https://tekkendocs.b-cdn.net/t8/videos/lars/t8-p2-lars-fc.1+2-426.mp4",
+};
+Object.assign(VIDS, VIDS_OVERRIDE);
+
+// Outcomes for key moves
+const OUTCOMES = {
+"df+2":      {hit:"+9 en hit. Transiciona automático a SEN. El rival no puede interrumpir con jabs.", block:"-3. Puedes continuar a SEN o cancelar con B (-11 en standing).", ch:"+13c en CH. Garantiza SEN.1 o SEN.1+2."},
+"db+4":      {hit:"+5c. Rival en crouch. Setup FC.df+2 para CH launch.", block:"-26. Rival puede lanzarte. Solo si muy condicionado.", ch:"Tornado +29a. Combo completo."},
+"SEN.1":     {hit:"Heat Engager +23a. Activa Heat. Balcony Break. Combo completo.", block:"-9. Rival puede presionar i9 o menos. Cancelar con B.", ch:"+23a igual."},
+"SEN.2":     {hit:"+6c. Rival en crouch. Continúa con ws moves.", block:"-12. Punible. Solo si rival condicionado.", ch:"Tornado +27d. v3.00.02: ya no lanza al aire completo."},
+"SEN.3":     {hit:"+29a KD. Atrapa sidestep.", block:"-13. Punible. Solo si lees sidestep.", ch:"+29a igual."},
+"SEN.4":     {hit:"+31a Aerial Tailspin. Combo.", block:"+4. Continúa presión con i13 o menos.", ch:"+31a igual."},
+"DEN.3":     {hit:"+5. SEN automático. Mix completo ininterrumpible.", block:"+5. Todo el mix de SEN es ininterrumpible.", ch:"+5 igual."},
+"DEN.1,2":   {hit:"Heat Engager +21c. Fuerza tech backroll. Heat Dash +36a.", block:"-6. Rival puede presionar. Muévete.", ch:"+21c igual."},
+"f,n,b+2,1": {hit:"+47a. Combo completo. El mejor launcher del juego.", block:"-18. Rival puede lanzarte. Solo como punish.", ch:"+47a igual."},
+"f+1+2":     {hit:"+28. Combo completo.", block:"-13. Rival puede castigar con i13.", ch:"+28 igual."},
+"FC.df+2":   {hit:"+5. Ventaja moderada.", block:"-8. Seguro.", ch:"+63a. Launch completo. Combo full."},
+"hFC.1+2":   {hit:"+1c. Rival en crouch. Transición a LEN con n,D (+3c).", block:"-12. Punible. Solo si rival espera el mid.", ch:"+1c igual."},
+"DEN.2":     {hit:"+7. UF → Avalanche Flip +64a.", block:"-7. Seguro.", ch:"+62a. Launch completo."},
+"H.2+3":     {hit:"Attack throw (+0) o 2do hit (+81a). v3: ya NO wall splat.", block:"+12c → DEN. Presión enorme.", ch:"+81a igual."},
+"d+2":       {hit:"+8c. Rival en crouch.", block:"+0c. Neutro.", ch:"v3: +30d con SPIKE. Antes era +10d. Gran buff."},
+"uf+1":      {hit:"+3. Transición a LEN con D.", block:"-12. Punible. Usar con confirmación.", ch:"+3 igual. Move nuevo en v3."},
+"ws1":       {hit:"Tornado +38a. Combo completo.", block:"-12. Solo como punish de lows.", ch:"+38a igual."},
+"ws3":       {hit:"+21 → LEN. Transición.", block:"+0. Neutro.", ch:"+21 igual."},
+"f,f,F+3":   {hit:"+15a. Combo.", block:"+6. Sigue presionando.", ch:"+15a igual."},
+"f,f,F+1":   {hit:"+36a. Aerial Tailspin. Combo. SEN.2 garantizado.", block:"+4 en SEN. Mix completo ininterrumpible.", ch:"+36a igual."},
+};
+
+// Followups per move
+const FOLLOWUPS = {
+"df+2":      [{cmd:"SEN.1", desc:"Mid Heat Engager i12", frames:"+23a", type:"heat", best:true},{cmd:"SEN.2",desc:"Low Tornado",frames:"+6c",type:"low"},{cmd:"SEN.3+4",desc:"Spike +0 bloq",frames:"+22d",type:"mid"},{cmd:"SEN~B",desc:"Cancelar a standing",frames:"-3",type:"cancel"}],
+"db+4":      [{cmd:"FC.df+2",desc:"CH bait estándar",frames:"+5/-8",type:"mid",best:true},{cmd:"ws4",desc:"WS rápido",frames:"+5",type:"mid"},{cmd:"ws1",desc:"Launch si intentan levantarse",frames:"+38a",type:"launch"}],
+"SEN.1":     [{cmd:"Heat Dash",desc:"Si Heat activo → +36a combo",frames:"+36a",type:"heat",best:true},{cmd:"SEN~B",desc:"Cancelar a standing",frames:"neutral",type:"cancel"}],
+"SEN.2":     [{cmd:"ws1",desc:"Tras CH Tornado +27d",frames:"+27d",type:"mid",best:true},{cmd:"FC.df+2",desc:"Mid crouch bait",frames:"+5/-8",type:"mid"},{cmd:"ws4",desc:"WS rápido",frames:"+5",type:"mid"}],
+"SEN.4":     [{cmd:"df+2 → SEN",desc:"+4 → df+2 i14 ininterrumpible",frames:"-3/+9",type:"mix",best:true},{cmd:"df+1",desc:"+4 → df+1 i13",frames:"-3/+5",type:"mid"},{cmd:"SEN.1",desc:"Loop al mix core",frames:"+23a",type:"heat"}],
+"DEN.3":     [{cmd:"SEN.1",desc:"+5 → SEN.1 i12",frames:"+23a",type:"heat",best:true},{cmd:"SEN.2",desc:"+5 → SEN.2 low",frames:"+6c",type:"low",best:true},{cmd:"SEN.4",desc:"+5 → SEN.4 high",frames:"+31a",type:"mid"},{cmd:"SEN.3",desc:"+5 → SEN.3 homing",frames:"+29a",type:"mid"}],
+"DEN.1":     [{cmd:"DEN.1,2",desc:"Jail → Heat Engager",frames:"+21c",type:"heat",best:true},{cmd:"DEN.3",desc:"→ SEN +5",frames:"+5",type:"mid"}],
+"DEN.1,2":   [{cmd:"Heat Dash",desc:"Si Heat activo → +36a",frames:"+36a",type:"heat",best:true}],
+"DEN.2":     [{cmd:"f,n,b+2,1",desc:"Combo tras CH",frames:"+47a",type:"launch",best:true},{cmd:"uf+3+4",desc:"Avalanche Flip en hit",frames:"+9/+64a",type:"mid"}],
+"f,n,b+2,1": [{cmd:"f+1,2,3~DEN.1 → b+3~f SEN.1+2 → DEN.2 u4",desc:"Combo avanzado. Max carry.",frames:"combo",type:"combo",best:true},{cmd:"f+1,2,3~DEN.1 → b+3 SEN.1+2 → DEN.2 UF",desc:"Combo principiante",frames:"combo",type:"combo"}],
+"f+1+2":     [{cmd:"df+3~d DEN.2 → df+2~SEN.4 → SEN.1+2 → DEN.2 u4",desc:"Combo avanzado",frames:"combo",type:"combo",best:true}],
+"f,f,F+1":   [{cmd:"SEN.1",desc:"+4 → SEN.1 ininterrumpible",frames:"+23a",type:"heat",best:true},{cmd:"SEN.2",desc:"+4 → SEN.2 low",frames:"+6c",type:"low"},{cmd:"SEN.4",desc:"+4 → SEN.4 homing",frames:"+31a",type:"mid"}],
+"2,1":       [{cmd:"LEN.2",desc:"LEN mid Tornado",frames:"+25",type:"mid",best:true},{cmd:"LEN.1",desc:"LEN low",frames:"+4c",type:"low"}],
+"ws1":       [{cmd:"~f SEN.3 → df+3~d DEN.2 → SEN.4 → SEN.1+2 → DEN.2 u4",desc:"Combo avanzado",frames:"combo",type:"combo",best:true}],
+"ws3":       [{cmd:"LEN.2",desc:"→ LEN Tornado",frames:"+25",type:"mid",best:true}],
+"d+2":       [{cmd:"ws4",desc:"FC rápido +5",frames:"+5",type:"mid"},{cmd:"FC.df+2",desc:"CH bait desde FC",frames:"+63a",type:"launch",best:true}],
+"H.2+3":     [{cmd:"DEN.1,2",desc:"+12c → DEN jail",frames:"+21c",type:"heat",best:true},{cmd:"DEN.3",desc:"+12c → SEN homing",frames:"+5",type:"mid"}],
+"H.f+3+4":   [{cmd:"SEN.1",desc:"+5 → SEN.1 ininterrumpible",frames:"+23a",type:"heat",best:true},{cmd:"SEN.2",desc:"+5 → SEN.2 low",frames:"+6c",type:"low"}],
+"FC.df+2":   [{cmd:"f,n,b+2,1",desc:"Combo tras CH",frames:"+47a",type:"launch",best:true}],
+};
+
+// Group order
+const GRPS = ["Pokes","Lows","Pressure","Launchers","Punishes","WS Punishes","SEN","DEN","LEN","Heat"];
+
+// ─── TREE DATA ───────────────────────────────────────────────
+const TREES = {
+neutral:{label:"Neutral / Pressure",children:[
+  {moveId:"f,f,F+3",best:true,label:"Mid seguro +6 bloq",out:{hit:"+15a → SEN mix",blk:"+6. Sigue presionando.",ch:"+15a."},children:[
+    {moveId:"SEN.1",best:true,label:"SEN.1 Heat Engager",out:{hit:"Heat Engager +23a.",blk:"-9.",ch:"+23a."}},
+    {moveId:"SEN.2",label:"SEN.2 low apuesta",out:{hit:"+6c crouch.",blk:"-12 punible.",ch:"Tornado +27d. (v3.00.02)"}},
+    {moveId:"SEN.4",label:"SEN.4 high +4",out:{hit:"+31a Tailspin.",blk:"+4 continúa.",ch:"+31a."}},
+  ]},
+  {moveId:"DEN.3",best:true,label:"DEN homing +5 → SEN",out:{hit:"+5 auto SEN.",blk:"+5 ininterrumpible.",ch:"+5."},children:[
+    {moveId:"SEN.1",best:true,label:"+5 → SEN.1 i12",out:{hit:"Heat Engager.",blk:"-9.",ch:"+23a."}},
+    {moveId:"SEN.2",label:"+5 → SEN.2 low",out:{hit:"+6c.",blk:"-12.",ch:"Tornado."}},
+    {moveId:"SEN.3",label:"+5 → SEN.3 homing",out:{hit:"+29a KD.",blk:"-13.",ch:"+29a."}},
+    {moveId:"SEN.4",label:"+5 → SEN.4 homing",out:{hit:"+31a.",blk:"+4.",ch:"+31a."}},
+  ]},
+  {moveId:"f,f,F+1",label:"Running Tailspin +4",out:{hit:"Aerial Tailspin +36a.",blk:"+4 SEN mix.",ch:"+36a."},children:[
+    {moveId:"SEN.1",best:true,label:"+4 → SEN.1",out:{hit:"Heat Engager.",blk:"-9.",ch:"+23a."}},
+    {moveId:"SEN.2",label:"+4 → SEN.2 low",out:{hit:"+6c.",blk:"-12.",ch:"Tornado."}},
+  ]},
+  {moveId:"b+1",label:"Homing anti-step",out:{hit:"+4 → df+2.",blk:"-9.",ch:"Balcony Break KD."},children:[
+    {moveId:"df+2",best:true,label:"Frame trap → SEN",out:{hit:"+9 SEN.",blk:"-3.",ch:"+13c SEN."}},
+    {moveId:"db+4",label:"Low apuesta",out:{hit:"+5c.",blk:"-26 punible.",ch:"Tornado."}},
+  ]},
+  {moveId:"db+4",label:"Low apuesta icónica",out:{hit:"+5c. Setup FC.df+2.",blk:"-26 solo condicionado.",ch:"Tornado +29a."},children:[
+    {moveId:"FC.df+2",best:true,label:"CH bait estándar",out:{hit:"+5.",blk:"-8.",ch:"+63a launch."}},
+    {moveId:"ws4",label:"WS rápido",out:{hit:"+5.",blk:"-6.",ch:"+5."}},
+  ]},
+]},
+sen:{label:"SEN Mix",children:[
+  {moveId:"SEN.1",best:true,label:"Mid Heat Engager (-9 bloq)",out:{hit:"Heat Engager +23a.",blk:"-9.",ch:"+23a."},children:[
+    {moveId:"SEN.3+4",label:"Spike +0 bloq",out:{hit:"+22d spike.",blk:"+0c neutro.",ch:"+22d."}},
+    {moveId:"H.f+3+4",best:true,label:"Heat PC +5 → SEN",out:{hit:"+10.",blk:"+5 ininterrumpible.",ch:"+10."}},
+  ]},
+  {moveId:"SEN.2",label:"Low Tornado (apuesta)",out:{hit:"+6c crouch.",blk:"-12 punible.",ch:"Tornado +27d. (v3.00.02)"},children:[
+    {moveId:"ws1",best:true,label:"Tras CH Tornado +27d",out:{hit:"+27d. Oki favorable.",blk:"-12.",ch:"+27d."}},
+    {moveId:"FC.df+2",label:"Mid crouch bait",out:{hit:"+5.",blk:"-8.",ch:"+63a."}},
+  ]},
+  {moveId:"SEN.3",label:"Homing mid (atrapa step)",out:{hit:"+29a KD.",blk:"-13 punible.",ch:"+29a."},children:[
+    {moveId:"SEN.1",best:true,label:"Loop al mix",out:{hit:"Heat Engager.",blk:"-9.",ch:"+23a."}},
+    {moveId:"SEN.2",label:"Volver al low",out:{hit:"+6c.",blk:"-12.",ch:"Tornado."}},
+  ]},
+  {moveId:"SEN.4",label:"High homing +4 bloq",out:{hit:"+31a Tailspin.",blk:"+4.",ch:"+31a."},children:[
+    {moveId:"df+2",best:true,label:"+4 → df+2 i14",out:{hit:"+9 SEN.",blk:"-3.",ch:"+13c."}},
+    {moveId:"df+1",label:"+4 → df+1 i13",out:{hit:"+5.",blk:"-3.",ch:"+5."}},
+  ]},
+  {moveId:"SEN.1+2",label:"Power crush (rival presiona)",out:{hit:"Tornado +20a.",blk:"-14.",ch:"igual."},children:[
+    {moveId:"f,n,b+2,1",best:true,label:"Combo tras PC",out:{hit:"+47a.",blk:"-18.",ch:"+47a."}},
+  ]},
+]},
+den:{label:"DEN Mix",children:[
+  {moveId:"DEN.1",best:true,label:"Jab +1 bloq",out:{hit:"+8 → DEN.1,2 o SEN.",blk:"+1. DEN.1,2 jailea.",ch:"+8."},children:[
+    {moveId:"DEN.1,2",best:true,label:"Jail Heat Engager",out:{hit:"+21c Heat.",blk:"-6.",ch:"+21c."}},
+    {moveId:"DEN.3",label:"→ SEN +5",out:{hit:"+5 SEN.",blk:"+5.",ch:"+5."}},
+  ]},
+  {moveId:"DEN.3",best:true,label:"Homing +5 → SEN auto",out:{hit:"+5 SEN completo.",blk:"+5 ininterrumpible.",ch:"+5."},children:[
+    {moveId:"SEN.1",best:true,label:"i12 ininterrumpible",out:{hit:"Heat Engager.",blk:"-9.",ch:"+23a."}},
+    {moveId:"SEN.2",label:"Low ininterrumpible",out:{hit:"+6c.",blk:"-12.",ch:"Tornado."}},
+    {moveId:"SEN.4",label:"High +4 ininterrumpible",out:{hit:"+31a.",blk:"+4.",ch:"+31a."}},
+  ]},
+  {moveId:"DEN.2",label:"Jab evasion CH launch",out:{hit:"+7 → UF Flip.",blk:"-7.",ch:"+62a launch."},children:[
+    {moveId:"f,n,b+2,1",best:true,label:"Combo tras CH",out:{hit:"+47a.",blk:"-18.",ch:"+47a."}},
+  ]},
+  {moveId:"DEN.4",label:"Low → LEN",out:{hit:"+1 LEN mix.",blk:"-12 punible.",ch:"+1."},children:[
+    {moveId:"LEN.2",best:true,label:"LEN Tornado",out:{hit:"+25.",blk:"-9.",ch:"+25."}},
+    {moveId:"LEN.1",label:"LEN low",out:{hit:"+4c.",blk:"-12.",ch:"+4c."}},
+  ]},
+]},
+punish:{label:"Punishes",children:[
+  {moveId:"2,1",best:true,label:"i10 más rápido → LEN",out:{hit:"+8 LEN.",blk:"-6.",ch:"+8."},children:[
+    {moveId:"LEN.2",best:true,label:"LEN Tornado",out:{hit:"+25.",blk:"-9.",ch:"+25."}},
+    {moveId:"LEN.1",label:"LEN low",out:{hit:"+4c.",blk:"-12.",ch:"+4c."}},
+  ]},
+  {moveId:"f+2,4",label:"i12 máximo daño",out:{hit:"+15. Balcony Break.",blk:"-12 punible.",ch:"+15."}},
+  {moveId:"f+2,1",label:"i12 → SEN mix",out:{hit:"+6. Entra SEN.",blk:"-5.",ch:"+6."}},
+  {moveId:"f,n,b+2,1",best:true,label:"i14 MEJOR launcher",out:{hit:"+47a combo.",blk:"-18 punible.",ch:"+47a."},children:[
+    {label:"Combo avanzado",synthetic:true,desc:"f+1,2,3~DEN.1 → b+3~f SEN.1+2 → DEN.2 u4",out:{hit:"Max carry.",blk:"N/A.",ch:"N/A."}},
+    {label:"Combo principiante",synthetic:true,desc:"f+1,2,3~DEN.1 → b+3 SEN.1+2 → DEN.2 UF",out:{hit:"Fácil ejecución.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"f+1+2",label:"i15 launcher fácil",out:{hit:"+28 combo.",blk:"-13 punible.",ch:"+28."},children:[
+    {label:"Combo avanzado",synthetic:true,desc:"df+3~d DEN.2 → df+2~SEN.4 → SEN.1+2 → DEN.2 u4",out:{hit:"Max carry.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"ws4",label:"WS i11 más rápido",out:{hit:"+5.",blk:"-6.",ch:"+5."}},
+  {moveId:"ws2,3",label:"WS i13 óptimo",out:{hit:"Tornado → LEN mix.",blk:"-15 punible.",ch:"+Tornado."}},
+  {moveId:"ws1",label:"WS launch vs low -15",out:{hit:"Tornado +38a.",blk:"-12.",ch:"+38a."},children:[
+    {label:"Combo WS",synthetic:true,desc:"~f SEN.3 → df+3~d DEN.2 → SEN.4 → SEN.1+2 → DEN.2 u4",out:{hit:"Max carry.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"ws3",label:"WS fuerte vs Hellsweep",out:{hit:"+21 → LEN.",blk:"+0 neutro.",ch:"+21."},children:[
+    {moveId:"LEN.2",best:true,label:"LEN Tornado",out:{hit:"+25.",blk:"-9.",ch:"+25."}},
+  ]},
+]},
+oki:{label:"Oki / Post-KD",children:[
+  {moveId:"db+4",best:true,label:"Low atrapa tech roll",out:{hit:"+5c → FC.df+2.",blk:"-26 solo condicionado.",ch:"Tornado +29a."},children:[
+    {moveId:"FC.df+2",best:true,label:"CH bait +5c",out:{hit:"+5.",blk:"-8.",ch:"+63a."}},
+    {moveId:"ws1",label:"Si se levantan rápido",out:{hit:"+38a.",blk:"-12.",ch:"+38a."}},
+  ]},
+  {moveId:"FC.df+2",best:true,label:"Mid atrapa levante rápido",out:{hit:"+5.",blk:"-8.",ch:"+63a combo."},children:[
+    {moveId:"f,n,b+2,1",best:true,label:"Combo tras CH",out:{hit:"+47a.",blk:"-18.",ch:"+47a."}},
+  ]},
+  {moveId:"DEN.3",label:"Avanzar + SEN mix",out:{hit:"+5 SEN.",blk:"+5.",ch:"+5."},children:[
+    {moveId:"SEN.1",best:true,label:"SEN.1 al levantarse",out:{hit:"Heat Engager.",blk:"-9.",ch:"+23a."}},
+    {moveId:"SEN.2",label:"Low al levantarse",out:{hit:"+6c.",blk:"-12.",ch:"Tornado."}},
+  ]},
+  {moveId:"f,F+4,2",label:"Hellsweep → DEN",out:{hit:"+11 → DEN.",blk:"-7.",ch:"+11."},children:[
+    {moveId:"DEN.1,2",best:true,label:"DEN jail Engager",out:{hit:"+21c Heat.",blk:"-6.",ch:"+21c."}},
+  ]},
+]},
+heat:{label:"Heat activo",children:[
+  {moveId:"SEN.1",best:true,label:"Heat Engager → Heat Dash",out:{hit:"Heat Dash +36a. Combo ext.",blk:"-9.",ch:"+23a."},children:[
+    {label:"Heat Dash combo",synthetic:true,desc:"SEN.1 → Heat Dash → df+3~d DEN.2 → SEN.4 → SEN.1+2 → DEN.2 u4",out:{hit:"Combo extendido máximo.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"H.f+3+4",best:true,label:"PC +5 → SEN",out:{hit:"+10.",blk:"+5 ininterrumpible.",ch:"+10."},children:[
+    {moveId:"SEN.1",best:true,label:"+5 → SEN.1",out:{hit:"Heat Engager.",blk:"-9.",ch:"+23a."}},
+    {moveId:"SEN.2",label:"+5 → SEN.2 low",out:{hit:"+6c.",blk:"-12.",ch:"Tornado."}},
+  ]},
+  {moveId:"H.SS.2",best:true,label:"+6 bloq (mejor advantage)",out:{hit:"+27d.",blk:"+6c. Sigue presionando.",ch:"+27d."},children:[
+    {moveId:"df+1",best:true,label:"+6 → df+1 ininterrumpible",out:{hit:"+5.",blk:"-3.",ch:"+5."}},
+    {moveId:"SEN.1",label:"+6 → SEN.1",out:{hit:"Heat Engager.",blk:"-9.",ch:"+23a."}},
+  ]},
+  {moveId:"H.2+3",label:"Heat Smash (v3: sin wall splat)",out:{hit:"Throw (+0) o 2do hit (+81a). v3: sin wall splat.",blk:"+12c → DEN.",ch:"+81a."},children:[
+    {moveId:"DEN.1,2",best:true,label:"+12c → DEN jail",out:{hit:"+21c Heat.",blk:"-6.",ch:"+21c."}},
+    {moveId:"DEN.3",label:"+12c → DEN homing",out:{hit:"+5 SEN.",blk:"+5.",ch:"+5."}},
+  ]},
+  {moveId:"DEN.1,2",label:"Heat Engager desde DEN",out:{hit:"+21c Heat Dash +36a.",blk:"-6.",ch:"+21c."},children:[
+    {label:"Heat Dash combo",synthetic:true,desc:"DEN.1,2 → Heat Dash → combo completo",out:{hit:"Combo completo.",blk:"N/A.",ch:"N/A."}},
+  ]},
+]},
+rival_crouch:{label:"Rival en crouch",children:[
+  {moveId:"FC.df+2",best:true,label:"Mid CH launcher (mejor opción)",out:{hit:"+5. Ventaja.",blk:"-8. Seguro.",ch:"+63a. Combo completo."},children:[
+    {moveId:"f,n,b+2,1",best:true,label:"Combo tras CH",out:{hit:"+47a launch.",blk:"-18.",ch:"+47a."}},
+    {label:"Combo avanzado",synthetic:true,desc:"FC.df+2 CH → db+2,1 → df+2~SEN.4 → SEN.1+2 → DEN.2 u4",out:{hit:"Máximo carry.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"ws4",best:true,label:"WS i11 — más rápido",out:{hit:"+5.",blk:"-6.",ch:"+5."},children:[
+    {moveId:"df+2",label:"→ SEN mix",out:{hit:"+9 SEN.",blk:"-3.",ch:"+13c."}},
+    {moveId:"db+4",label:"Low apuesta",out:{hit:"+5c.",blk:"-26.",ch:"Tornado."}},
+  ]},
+  {moveId:"db+4",label:"Low — rival espera el mid",out:{hit:"+5c. Setup FC.df+2.",blk:"-26 punible.",ch:"Tornado +29a."},children:[
+    {moveId:"FC.df+2",best:true,label:"CH bait estándar",out:{hit:"+5.",blk:"-8.",ch:"+63a."}},
+  ]},
+  {moveId:"ws3",label:"WS fuerte si rival muy negativo",out:{hit:"+21 → LEN.",blk:"+0 neutro.",ch:"+21."},children:[
+    {moveId:"LEN.2",best:true,label:"LEN Tornado",out:{hit:"+25.",blk:"-9.",ch:"+25."}},
+    {moveId:"LEN.1",label:"LEN low mix",out:{hit:"+4c.",blk:"-12.",ch:"+4c."}},
+  ]},
+  {moveId:"FC.1+2",label:"Double low — rival espera mid",out:{hit:"+1c.",blk:"-12 punible.",ch:"+1c."}},
+]},
+
+rival_pressures:{label:"Rival presiona / me atacan",children:[
+  {moveId:"SEN.1+2",best:true,label:"Power crush desde SEN",out:{hit:"Tornado +20a. Absorbe el golpe.",blk:"-14. Solo si lees presión.",ch:"+20a."},children:[
+    {moveId:"f,n,b+2,1",best:true,label:"Combo tras PC hit",out:{hit:"+47a.",blk:"-18.",ch:"+47a."}},
+  ]},
+  {moveId:"H.f+3+4",best:true,label:"Heat PC +5 (si Heat activo)",out:{hit:"+10.",blk:"+5 → SEN ininterrumpible.",ch:"+10."},children:[
+    {moveId:"SEN.1",best:true,label:"+5 → SEN.1 i12",out:{hit:"Heat Engager.",blk:"-9.",ch:"+23a."}},
+    {moveId:"SEN.2",label:"+5 → SEN.2 low",out:{hit:"+6c.",blk:"-12.",ch:"Tornado."}},
+  ]},
+  {moveId:"1+2",label:"PC de pie i25",out:{hit:"+7. Continúa presión.",blk:"-12 punible.",ch:"+7."},children:[
+    {moveId:"df+2",best:true,label:"→ SEN mix",out:{hit:"+9 SEN.",blk:"-3.",ch:"+13c."}},
+  ]},
+  {moveId:"db+1+2",label:"Backsway — esquivar strings",out:{hit:"+8 → DEN.",blk:"-13. Si la DEN no conecta cuidado.",ch:"+8."},children:[
+    {moveId:"DEN.1,2",best:true,label:"DEN jail Engager",out:{hit:"+21c Heat.",blk:"-6.",ch:"+21c."}},
+    {moveId:"DEN.3",label:"DEN homing +5",out:{hit:"+5 SEN.",blk:"+5.",ch:"+5."}},
+  ]},
+  {moveId:"uf+3",label:"High crush launcher (riesgo alto)",out:{hit:"+33a combo.",blk:"-26 punible.",ch:"+33a."},children:[
+    {label:"Combo tras uf+3",synthetic:true,desc:"uf+3 → ws2~f SEN.1+2 → DEN.2 u4",out:{hit:"Combo completo.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"b+1",label:"Homing — rival mueve mucho",out:{hit:"+4 → df+2.",blk:"-9.",ch:"Balcony Break KD."},children:[
+    {moveId:"df+2",best:true,label:"Frame trap → SEN",out:{hit:"+9 SEN.",blk:"-3.",ch:"+13c."}},
+  ]},
+]},
+
+wall:{label:"Cerca de la pared",children:[
+  {moveId:"b+2,3",best:true,label:"Tornado + Balcony Break",out:{hit:"+38d. Balcony Break.",blk:"-8.",ch:"+38d."},children:[
+    {label:"Wall combo estándar",synthetic:true,desc:"b+2,3 → df+1 → db+2,1 → f+1+4",out:{hit:"Máximo daño en pared.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"f+1+4",best:true,label:"Wall break shoulder i13",out:{hit:"+18. Balcony Break.",blk:"-18 punible.",ch:"+18."},children:[
+    {label:"Post wall break",synthetic:true,desc:"f+1+4 → df+1 → d3,1",out:{hit:"Daño post-break.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"df+1,1,3",label:"Wall splat string",out:{hit:"+16d. Wall splat.",blk:"-12 punible.",ch:"+16d."},children:[
+    {label:"Wall combo",synthetic:true,desc:"df+1,1,3 → df+1 → db+2,1 → f+1+4",out:{hit:"Máximo tras wall splat.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"DEN.3",label:"DEN homing para presionar",out:{hit:"+5 → SEN wall pressure.",blk:"+5.",ch:"+5."},children:[
+    {moveId:"SEN.1",best:true,label:"SEN.1 en pared",out:{hit:"Heat Engager + wall damage.",blk:"-9.",ch:"+23a."}},
+    {moveId:"SEN.3+4",label:"SEN spike en pared",out:{hit:"+22d spike → wall combo.",blk:"+0c.",ch:"+22d."}},
+  ]},
+  {moveId:"db+2,3",label:"Tornado wall crush",out:{hit:"+8. Wall Crush +20g.",blk:"-13.",ch:"+8."},children:[
+    {label:"Wall crush combo",synthetic:true,desc:"db+2,3 → df+1 → f+1+4",out:{hit:"Wall combo.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"db+2,3*",label:"Tornado cargado +13 bloq",out:{hit:"+24d. Balcony Break.",blk:"+13. Presión enorme.",ch:"+24d."},children:[
+    {moveId:"SEN.1",best:true,label:"+13 → SEN mix",out:{hit:"Heat Engager.",blk:"-9.",ch:"+23a."}},
+    {moveId:"df+1",label:"+13 → df+1 i13",out:{hit:"+5.",blk:"-3.",ch:"+5."}},
+  ]},
+]},
+
+ws:{label:"Desde while standing",children:[
+  {moveId:"ws4",best:true,label:"i11 — punish más rápido",out:{hit:"+5.",blk:"-6.",ch:"+5."},children:[
+    {moveId:"df+2",best:true,label:"→ SEN mix",out:{hit:"+9 SEN.",blk:"-3.",ch:"+13c."}},
+    {moveId:"db+4",label:"Low apuesta",out:{hit:"+5c.",blk:"-26.",ch:"Tornado."}},
+  ]},
+  {moveId:"ws2",label:"i13 → DEN o SEN",out:{hit:"+3.",blk:"-8.",ch:"+3."},children:[
+    {moveId:"ws2,3",best:true,label:"WS optimal punish",out:{hit:"Tornado → LEN.",blk:"-15.",ch:"Tornado."}},
+    {moveId:"DEN.3",label:"→ DEN +5",out:{hit:"+5 SEN.",blk:"+5.",ch:"+5."}},
+  ]},
+  {moveId:"ws1",best:true,label:"i15 — launch vs low -15",out:{hit:"Tornado +38a.",blk:"-12.",ch:"+38a."},children:[
+    {label:"Combo WS avanzado",synthetic:true,desc:"ws1 → ~f SEN.3 → df+3~d DEN.2 → SEN.4 → SEN.1+2 → DEN.2 u4",out:{hit:"Max carry.",blk:"N/A.",ch:"N/A."}},
+    {label:"Combo WS principiante",synthetic:true,desc:"ws1 → uf+3 → ws2~f SEN.1+2 → DEN.2 u4",out:{hit:"Fácil ejecución.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"FC.df+2",label:"i15 FC — CH launcher",out:{hit:"+5.",blk:"-8.",ch:"+63a. Combo completo."},children:[
+    {moveId:"f,n,b+2,1",best:true,label:"Combo tras CH",out:{hit:"+47a.",blk:"-18.",ch:"+47a."}},
+  ]},
+  {moveId:"ws3",label:"i20 — vs Hellsweep y -20+",out:{hit:"+21 → LEN.",blk:"+0 neutro.",ch:"+21."},children:[
+    {moveId:"LEN.2",best:true,label:"LEN Tornado",out:{hit:"+25.",blk:"-9.",ch:"+25."}},
+    {moveId:"LEN.1",label:"LEN low",out:{hit:"+4c.",blk:"-12.",ch:"+4c."}},
+  ]},
+]},
+
+ch:{label:"Counter hit confirmado",children:[
+  {moveId:"FC.df+2",best:true,label:"CH FC.df+2 — mejor starter",out:{hit:"CH: +63a. Combo completo.",blk:"-8.",ch:"+63a."},children:[
+    {label:"Combo avanzado",synthetic:true,desc:"FC.df+2 CH → db+2,1 → df+2~SEN.4 → db+2~f SEN.1+2 → SSL DEN.2 u4",out:{hit:"Máximo carry.",blk:"N/A.",ch:"N/A."}},
+    {label:"Combo principiante",synthetic:true,desc:"FC.df+2 CH → ws2~f SEN.1+2 → df+1 → f+2,1~SEN.1",out:{hit:"Fácil ejecución.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"DEN.2",best:true,label:"CH DEN.2 — jab evasion",out:{hit:"CH: +62a. Combo.",blk:"-7.",ch:"+62a."},children:[
+    {label:"Combo tras CH DEN.2",synthetic:true,desc:"DEN.2 CH → f+1,2,3~DEN.1 → SEN.1+2 → DEN.2 u4",out:{hit:"Combo completo.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"b+2,1",label:"CH b+2,1 — delayable",out:{hit:"CH: +32a. Combo.",blk:"-10.",ch:"+32a."},children:[
+    {label:"Combo tras CH",synthetic:true,desc:"b+2,1 CH → f+1,2,3~DEN.1 → SEN.1+2 → DEN.2 u4",out:{hit:"Combo completo.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"SEN.2",label:"CH SEN.2 — Tornado",out:{hit:"CH: +27d. Tornado. (v3.00.02)",blk:"-12 punible.",ch:"+73a."},children:[
+    {moveId:"ws1",best:true,label:"Tras Tornado → launch",out:{hit:"+38a.",blk:"-12.",ch:"+38a."}},
+    {label:"Combo Tornado",synthetic:true,desc:"SEN.2 CH → ws1 → ~f SEN.3 → SEN.1+2 → DEN.2 u4",out:{hit:"Max carry.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"db+4",label:"CH db+4 — Tornado bajo",out:{hit:"CH: +29a. Tornado.",blk:"-26 punible.",ch:"+29a."},children:[
+    {label:"Combo CH db+4",synthetic:true,desc:"db+4 CH → FC.df+2 → db+2,1 → df+2~SEN.4 → SEN.1+2 → DEN.2 u4",out:{hit:"Max carry.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"b+1",label:"CH b+1 — Balcony Break",out:{hit:"CH: +14a. Balcony Break.",blk:"-9.",ch:"+14a."},children:[
+    {label:"Pick-up tras CH",synthetic:true,desc:"b+1 CH → f+1+2 → combo",out:{hit:"Combo completo.",blk:"N/A.",ch:"N/A."}},
+  ]},
+  {moveId:"d+2",label:"CH d+2 — Spike (v3 buff)",out:{hit:"CH: +30d. Spike. (antes +10d)",blk:"+0c.",ch:"+30d."},children:[
+    {moveId:"FC.df+2",best:true,label:"Bait desde FC",out:{hit:"+5.",blk:"-8.",ch:"+63a."}},
+  ]},
+]},
+
+low_parry:{label:"Tras low parry",children:[
+  {label:"Combo tras low parry",best:true,synthetic:true,desc:"Low parry → f,f,F+1~b → f,F+4,2~DEN.1 → df+3~d DEN.2 u4",out:{hit:"Combo completo. El más dañino.",blk:"N/A.",ch:"N/A."},children:[
+    {moveId:"f,n,b+2,1",best:true,label:"Alternativa más fácil",out:{hit:"+47a. Combo.",blk:"-18.",ch:"+47a."}},
+    {label:"Combo principiante",synthetic:true,desc:"Low parry → f+1,2,3~DEN.1 → b+3~f SEN.1+2 → DEN.2 UF",out:{hit:"Fácil ejecución.",blk:"N/A.",ch:"N/A."}},
+  ]},
+]},
+
+sidestep:{label:"Desde sidestep",children:[
+  {moveId:"SS.2",best:true,label:"SS mid KND — el más importante",out:{hit:"+22d. KND. Oki fuerte.",blk:"-7.",ch:"+22d."},children:[
+    {moveId:"f,F+2",best:true,label:"Combo tras SS.2",out:{hit:"+35a Tornado.",blk:"-13.",ch:"+35a."}},
+    {moveId:"DEN.3",label:"→ DEN y SEN mix",out:{hit:"+5 SEN.",blk:"+5.",ch:"+5."}},
+  ]},
+  {moveId:"b+1",label:"Homing si el rival trackea",out:{hit:"+4. Continúa.",blk:"-9.",ch:"Balcony Break."},children:[
+    {moveId:"df+2",best:true,label:"Frame trap → SEN",out:{hit:"+9 SEN.",blk:"-3.",ch:"+13c."}},
+  ]},
+  {moveId:"db+4",label:"Low tras sidestep",out:{hit:"+5c.",blk:"-26 punible.",ch:"Tornado."},children:[
+    {moveId:"FC.df+2",best:true,label:"CH bait",out:{hit:"+5.",blk:"-8.",ch:"+63a."}},
+  ]},
+  {moveId:"f,F+1+2",label:"Elbow — bueno vs pushback",out:{hit:"+14. (+5 con scaling).",blk:"-9.",ch:"+59a."},children:[
+    {moveId:"SEN.1",best:true,label:"→ SEN mix",out:{hit:"Heat Engager.",blk:"-9.",ch:"+23a."}},
+  ]},
+]},
+
+rival_rage:{label:"Rival con Rage activo",children:[
+  {moveId:"b+1",best:true,label:"Homing — no dejes moverse",out:{hit:"+4. Sigue presionando.",blk:"-9.",ch:"Balcony Break."},children:[
+    {moveId:"df+2",best:true,label:"Frame trap → SEN",out:{hit:"+9 SEN.",blk:"-3.",ch:"+13c."}},
+    {moveId:"DEN.3",label:"DEN homing desde distancia",out:{hit:"+5 SEN.",blk:"+5.",ch:"+5."}},
+  ]},
+  {moveId:"3+4",label:"Heat Engager largo vs pushback",out:{hit:"+17d. Activa Heat.",blk:"-8.",ch:"+17d."},children:[
+    {moveId:"H.f+3+4",best:true,label:"PC en Heat vs Rage Art",out:{hit:"+10.",blk:"+5 SEN.",ch:"+10."}},
+  ]},
+  {moveId:"1+2",label:"Power crush absorbe Rage Art",out:{hit:"+7.",blk:"-12.",ch:"+7."},children:[
+    {moveId:"df+2",best:true,label:"→ SEN tras PC",out:{hit:"+9 SEN.",blk:"-3.",ch:"+13c."}},
+  ]},
+  {moveId:"f,f,F+3",best:true,label:"+6 bloq — presión segura",out:{hit:"+15a.",blk:"+6. Rival no puede hacer Rage Art.",ch:"+15a."},children:[
+    {moveId:"SEN.1",best:true,label:"→ SEN.1 Heat Engager",out:{hit:"+23a.",blk:"-9.",ch:"+23a."}},
+    {moveId:"SEN.2",label:"→ SEN.2 low",out:{hit:"+6c.",blk:"-12.",ch:"Tornado."}},
+  ]},
+  {moveId:"df+2",label:"df+2 i14 seguro vs Rage",out:{hit:"+9 → SEN. Activa mix.",blk:"-3.",ch:"+13c."},children:[
+    {moveId:"SEN.1",best:true,label:"SEN.1 Heat Engager",out:{hit:"+23a.",blk:"-9.",ch:"+23a."}},
+    {moveId:"SEN.4",label:"SEN.4 homing +4",out:{hit:"+31a.",blk:"+4.",ch:"+31a."}},
+  ]},
+]}
+
+};
+
+// ═══════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════
+function fvc(v){
+  if(!v) return 'fneut';
+  if(v.match(/\d+a/) || v.includes('launch') || v.includes('combo')) return 'flaunch';
+  const n=parseInt(v);
+  if(isNaN(n)) return 'fneut';
+  return n>0?'fpos':n<0?'fneg':'fneut';
+}
+function normalize(cmd){ return (cmd||'').replace(/^[→~\s]+/,'').trim(); }
+
+const TAG_CFG = {
+  MID:{c:'#60aaff'},HIGH:{c:'#ff5060'},LOW:{c:'#ffb830'},SAFE:{c:'#66cc6a'},
+  HEAT:{c:'#ff6b2b'},HOMING:{c:'#22cc90'},LAUNCH:{c:'#ff6b2b'},JAIL:{c:'#a090ff'},
+  PC:{c:'#ffb830'},TORNADO:{c:'#60aaff'},SPIKE:{c:'#ff5060'},KNEE:{c:'#9090b0'},ELBOW:{c:'#9090b0'},
+};
+function tagHtml(tags, cls='badge'){
+  return (tags||[]).map(t=>{
+    const cfg=TAG_CFG[t]||{c:'#888'};
+    return `<span class="${cls}" style="background:${cfg.c}20;color:${cfg.c};border:1px solid ${cfg.c}40">${t}</span>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// MOVE LIST
+// ═══════════════════════════════════════════════════════════
+let selectedCmd = null;
+
+function buildMoveList(filter=''){
+  const el = document.getElementById('move-list');
+  el.innerHTML='';
+  const grouped={};
+  GRPS.forEach(g=>grouped[g]=[]);
+  Object.values(MOVES).forEach(m=>{
+    if(!filter || m.cmd.toLowerCase().includes(filter) || m.name.toLowerCase().includes(filter))
+      if(grouped[m.grp]) grouped[m.grp].push(m);
+  });
+  GRPS.forEach(g=>{
+    const items=grouped[g];
+    if(!items||!items.length) return;
+    const lbl=document.createElement('div');
+    lbl.className='grp-label'; lbl.textContent=g;
+    el.appendChild(lbl);
+    items.forEach(m=>{
+      const row=document.createElement('div');
+      row.className='move-row'+(selectedCmd===m.cmd?' active':'');
+      row.innerHTML=`<span class="mr-cmd">${m.cmd}</span><span class="mr-name">${m.name}</span>${m.isNew?'<span class="mr-new">NEW</span>':''}`;
+      row.addEventListener('click',()=>selectMove(m.cmd));
+      row.addEventListener('mouseenter',e=>showPreview(e,m.cmd));
+      row.addEventListener('mouseleave',hidePreview);
+      el.appendChild(row);
+    });
+  });
+}
+
+function filterMoves(q){ buildMoveList(q.toLowerCase()); }
+
+function selectMove(cmd){
+  selectedCmd=cmd;
+  buildMoveList(document.getElementById('search-inp').value.toLowerCase());
+  renderDetail(cmd);
+  // If tree is open, highlight node
+  if(currentTab==='tree') highlightTreeNode(cmd);
+}
+
+// ═══════════════════════════════════════════════════════════
+// DETAIL RENDERER
+// ═══════════════════════════════════════════════════════════
+function renderDetail(cmd){
+  const m=MOVES[cmd];
+  if(!m){renderEmpty();return;}
+
+  const o=OUTCOMES[cmd]||{};
+  const fu=FOLLOWUPS[cmd]||[];
+  const vid=VIDS[cmd];
+  const tdUrl=`https://tekkendocs.com/t8/lars/${encodeURIComponent(cmd)}`;
+  const okiUrl=`https://okizeme.gg/database/lars`;
+
+  const videoSection = vid
+    ? `<div class="dc-video">
+        <video autoplay muted loop playsinline>
+          <source src="${vid}" type="video/mp4">
+        </video>
+        <span class="vid-label">${cmd}</span>
+        <span class="vid-src">▶ OKIZEME</span>
+      </div>`
+    : `<div class="dc-novideo">Sin video disponible — hover sobre el move para verlo en Okizeme</div>`;
+
+  const notesHtml = m.notes?.length
+    ? `<div class="dc-notes">
+        <div class="dc-notes-title">NOTAS v3</div>
+        ${m.notes.map(n=>`<div class="dc-note">• ${n}</div>`).join('')}
+       </div>` : '';
+
+  const outHtml = (o.hit||o.blk||o.ch) ? `
+    <div class="outcomes">
+      ${o.hit?`<div class="out-row"><span class="out-lbl ol-hit">HIT</span><div><div class="out-txt">${o.hit}</div></div></div>`:''}
+      ${o.blk?`<div class="out-row"><span class="out-lbl ol-blk">BLOQ</span><div><div class="out-txt">${o.blk}</div></div></div>`:''}
+      ${o.ch?`<div class="out-row"><span class="out-lbl ol-ch">CH</span><div><div class="out-txt">${o.ch}</div></div></div>`:''}
+    </div>` : '';
+
+  const fuHtml = fu.length ? `
+    <div class="fu-section">
+      <div class="fu-title">Mejores continuaciones</div>
+      ${fu.map((f,fi)=>{
+        const slug=normalize(f.cmd);
+        const fc=parseInt(f.frames);
+        const fcls=isNaN(fc)?'flaunch':fc>0?'fpos':fc<0?'fneg':'fneut';
+        return `<div class="fu-card${f.best?' best':''}"
+          onclick="openFollowup('${slug}')"
+          onmouseenter="showPreview(event,'${slug}')"
+          onmouseleave="hidePreview()">
+          <div>
+            <div class="fu-cmd">${f.cmd}${f.best?' <span style="color:var(--teal)">★</span>':''}</div>
+            <div class="fu-desc">${f.desc}</div>
+            <div class="fu-tags">
+              ${f.type==='heat'?`<span class="badge" style="background:#ff6b2b20;color:#ff6b2b;border:1px solid #ff6b2b40">HEAT</span>`:''}
+              ${f.type==='launch'?`<span class="badge" style="background:#ff6b2b20;color:#ff9060;border:1px solid #ff6b2b40">LAUNCH</span>`:''}
+              ${f.type==='low'?`<span class="badge" style="background:#ffb83020;color:#ffb830;border:1px solid #ffb83040">LOW</span>`:''}
+              ${f.type==='combo'?`<span class="badge" style="background:#a090ff20;color:#a090ff;border:1px solid #a090ff40">COMBO</span>`:''}
+              ${f.type==='mix'?`<span class="badge" style="background:#60aaff20;color:#60aaff;border:1px solid #60aaff40">MIX</span>`:''}
+            </div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="fu-frame ${fcls}" style="background:${fc>=0?'rgba(100,220,100,.1)':'rgba(255,80,80,.1)'}">${f.frames}</div>
+            ${f.best?'<div class="fu-best-tag" style="margin-top:3px">★ rec.</div>':''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>` : '';
+
+  const newBadge=m.isNew?`<span class="badge" style="background:rgba(34,204,144,.2);color:var(--teal);border:1px solid rgba(34,204,144,.3)">NEW v3</span>`:'';
+  const riskColor=m.risk==='safe'?'#22cc90':m.risk==='punible'?'#ff5060':'#ffb830';
+
+  document.getElementById('move-detail').innerHTML = `
+    <div class="detail-card">
+      <div class="dc-header">
+        <div style="flex:1;min-width:0">
+          <div class="dc-cmd">${m.cmd}</div>
+          <div class="dc-name">${m.name}</div>
+          <div class="dc-badges" style="margin-top:7px">
+            ${tagHtml(m.tags)}
+            <span class="badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${m.risk.toUpperCase()}</span>
+            ${newBadge}
+          </div>
+        </div>
+        <div class="dc-startup">
+          <div class="lbl">STARTUP</div>
+          <div class="val" style="color:var(--text)">${m.startup}</div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:2px">${speedLabel(m.startup)}</div>
+        </div>
+      </div>
+
+      ${videoSection}
+
+      <div class="frames-grid">
+        <div class="fg"><div class="fg-lbl">VELOCIDAD</div><div class="fg-val fneut">${m.startup}</div><div class="fg-sub">frames hasta activar</div></div>
+        <div class="fg"><div class="fg-lbl">BLOQUEO</div><div class="fg-val ${fvc(m.block)}">${m.block}</div><div class="fg-sub">si rival bloquea</div></div>
+        <div class="fg"><div class="fg-lbl">EN HIT</div><div class="fg-val ${fvc(m.hit)}">${m.hit}</div><div class="fg-sub">si el golpe conecta</div></div>
+        <div class="fg"><div class="fg-lbl">COUNTER HIT</div><div class="fg-val ${fvc(m.ch)}">${m.ch}</div><div class="fg-sub">si rival atacaba</div></div>
+      </div>
+
+      ${outHtml}
+      ${fuHtml}
+      ${notesHtml}
+
+      <div class="dc-links">
+        <a class="dc-link dc-link-td" href="${tdUrl}" target="_blank" rel="noopener">▶ TekkenDocs</a>
+        <a class="dc-link dc-link-oki" href="${okiUrl}" target="_blank" rel="noopener">▶ Okizeme</a>
+      </div>
+    </div>`;
+}
+
+function speedLabel(s){
+  const n=parseInt((s||'').replace('i',''));
+  if(isNaN(n)) return '';
+  if(n<=10) return '⚡ Muy rápido';
+  if(n<=13) return '▶ Rápido';
+  if(n<=16) return '▷ Normal';
+  if(n<=20) return '◷ Lento';
+  return '⏱ Muy lento';
+}
+
+function openFollowup(cmd){
+  const c=normalize(cmd);
+  if(MOVES[c]){ selectMove(c); window.scrollTo(0,0); }
+}
+
+function renderEmpty(){
+  document.getElementById('move-detail').innerHTML=`
+    <div class="empty-state">
+      <div class="empty-icon">⚡</div>
+      <div class="empty-h">Selecciona un move</div>
+      <div class="empty-p">Elige cualquier move del panel izquierdo para ver sus frames, video y mejores continuaciones.</div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// HOVER PREVIEW
+// ═══════════════════════════════════════════════════════════
+const tt=document.getElementById('preview-tt');
+let hideTimer=null;
+
+function showPreview(e, cmd){
+  cmd=normalize(cmd);
+  const m=MOVES[cmd];
+  clearTimeout(hideTimer);
+  if(!m){ hidePreview(); return; }
+
+  const vid=VIDS[cmd];
+  const va=document.getElementById('pt-video-area');
+  if(vid){
+    va.innerHTML=`<video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:contain"><source src="${vid}" type="video/mp4"></video><span class="pt-cmd-lbl">${cmd}</span>`;
+  } else {
+    va.innerHTML=`<div class="pt-placeholder"><div class="pt-bars"><div class="pt-bar"></div><div class="pt-bar"></div><div class="pt-bar"></div><div class="pt-bar"></div><div class="pt-bar"></div><div class="pt-bar"></div></div><span class="pt-cmd-lbl">${cmd}</span><span class="pt-novid">sin video</span></div>`;
+  }
+
+  document.getElementById('pt-name').textContent=m.name;
+  document.getElementById('pt-fgrid').innerHTML=`
+    <div class="pt-f"><div class="pt-fl">VELOCIDAD</div><div class="pt-fv fneut">${m.startup}</div></div>
+    <div class="pt-f"><div class="pt-fl">BLOQUEO</div><div class="pt-fv ${fvc(m.block)}">${m.block}</div></div>
+    <div class="pt-f"><div class="pt-fl">EN HIT</div><div class="pt-fv ${fvc(m.hit)}">${m.hit}</div></div>
+    <div class="pt-f"><div class="pt-fl">COUNTER</div><div class="pt-fv ${fvc(m.ch)}">${m.ch}</div></div>`;
+  document.getElementById('pt-tags').innerHTML=tagHtml(m.tags,'pt-tag');
+
+  tt.classList.add('show');
+  posTooltip(e);
+}
+
+function posTooltip(e){
+  const W=window.innerWidth,H=window.innerHeight,tw=252,th=260;
+  let x=e.clientX+16,y=e.clientY+10;
+  if(x+tw>W-8) x=e.clientX-tw-10;
+  if(y+th>H-8) y=e.clientY-th-10;
+  tt.style.left=x+'px'; tt.style.top=y+'px';
+}
+
+function hidePreview(){ hideTimer=setTimeout(()=>tt.classList.remove('show'),80); }
+document.addEventListener('mousemove',e=>{ if(tt.classList.contains('show')) posTooltip(e); });
+
+// ═══════════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════════
+let currentTab='guide';
+function switchTab(t){
+  currentTab=t;
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  document.getElementById('guide-view').style.display=   t==='guide'  ?'flex':'none';
+  document.getElementById('tree-view').style.display=    t==='tree'   ?'block':'none';
+  document.getElementById('builder-view').style.display= t==='builder'?'flex':'none';
+  document.getElementById('sidebar').style.display=      t==='builder'?'none':'flex';
+  if(t==='tree' && !treeBuilt){ buildTree('neutral'); treeBuilt=true; }
+  if(t==='builder'){ bldViewReady(); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// TREE ENGINE
+// ═══════════════════════════════════════════════════════════
+let treeBuilt=false;
+let tNodes={}, tEdges=[], tIdSeq=0;
+let tZoom=1, tPanX=80, tPanY=30;
+let tDragNode=null, tDragOX=0, tDragOY=0;
+let tPanning=false, tPanSX=0, tPanSY=0, tPanOX=0, tPanOY=0;
+const NW=190, VGAP=165, HGAP=215;
+
+const tc=document.getElementById('tree-canvas');
+const tsvg=document.getElementById('tree-svg');
+const tvw=document.getElementById('tree-view');
+
+function tApply(){ tc.style.transform=`translate(${tPanX}px,${tPanY}px) scale(${tZoom})`; tDrawEdges(); tMinimap(); }
+function tReset(){ tZoom=1;tPanX=80;tPanY=30;tApply(); }
+function tZoomAt(cx,cy,f){ const nz=Math.min(2.5,Math.max(.2,tZoom*f)); tPanX=cx-nz/tZoom*(cx-tPanX); tPanY=cy-nz/tZoom*(cy-tPanY); tZoom=nz; tApply(); }
+
+tvw.addEventListener('wheel',e=>{ e.preventDefault(); tZoomAt(e.clientX,e.clientY,e.deltaY<0?1.12:1/1.12); },{passive:false});
+tvw.addEventListener('mousedown',e=>{ if(tDragNode) return; tPanning=true; tPanSX=e.clientX;tPanSY=e.clientY;tPanOX=tPanX;tPanOY=tPanY; tvw.classList.add('grabbing'); });
+document.addEventListener('mousemove',e=>{
+  if(tDragNode){ const nd=tNodes[tDragNode]; nd.x=e.clientX/tZoom-tDragOX; nd.y=e.clientY/tZoom-tDragOY; nd.el.style.left=nd.x+'px'; nd.el.style.top=nd.y+'px'; tDrawEdges();tMinimap(); return; }
+  if(tPanning){ tPanX=tPanOX+(e.clientX-tPanSX);tPanY=tPanOY+(e.clientY-tPanSY);tApply(); }
+});
+document.addEventListener('mouseup',()=>{ if(tDragNode){tNodes[tDragNode].el.style.zIndex='';tDragNode=null;} if(tPanning){tPanning=false;tvw.classList.remove('grabbing');} });
+
+function clearTree(){ Object.values(tNodes).forEach(n=>n.el.remove()); tNodes={};tEdges=[];tIdSeq=0;tsvg.innerHTML=''; }
+
+function buildTree(rootKey){
+  clearTree();
+  const tree=TREES[rootKey];
+  if(!tree) return;
+  const rootId=addTNode({label:tree.label,synthetic:true,isRoot:true,children:tree.children,expanded:true},400,30);
+  buildTChildren(rootId,tree.children);
+  tAutoLayout();
+  tApply();
+}
+
+function addTNode(data,x,y){
+  const id='tn'+(tIdSeq++);
+  const el=document.createElement('div');
+  const m=data.moveId?MOVES[data.moveId]:null;
+  el.className='tnode'+(data.isRoot?' t-root':'')+(data.best?' t-best':'');
+  el.style.width=NW+'px';
+
+  if(data.synthetic){
+    el.innerHTML=`<div class="tn-head">
+      <span class="tn-cmd" style="color:var(--purple);font-size:11px">${data.label||'?'}</span>
+      ${buildTExpBtn(id,data)}
+    </div>
+    ${data.desc?`<div class="tn-body"><div style="font-size:9px;color:var(--dim);font-family:var(--mono);line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px">${data.desc}</div></div>`:''}`;
+  } else {
+    el.innerHTML=`<div class="tn-head">
+      <span class="tn-cmd">${m?m.cmd:data.label||'?'}</span>
+      ${data.best?'<span class="tn-best">★</span>':''}
+      ${buildTExpBtn(id,data)}
+    </div>
+    <div class="tn-body">
+      ${m?`<div class="tn-frames">
+        <span class="tn-f"><span class="tn-fl">VELOCIDAD</span><span class="tn-fv">${m.startup}</span></span>
+        <span class="tn-f"><span class="tn-fl">BLOQUEO</span><span class="tn-fv" style="color:${parseInt(m.block)>=0?'#90ee90':'#ff8888'}">${m.block}</span></span>
+        <span class="tn-f"><span class="tn-fl">EN HIT</span><span class="tn-fv" style="color:#ffaa70">${m.hit}</span></span>
+      </div>
+      <div class="tn-tags">${(m.tags||[]).map(t=>{const c=TAG_CFG[t]?.c||'#888';return`<span class="tn-tag" style="background:${c}20;color:${c};border:1px solid ${c}40">${t}</span>`;}).join('')}</div>`:''}
+    </div>`;
+  }
+
+  // Events
+  el.addEventListener('mousedown',e=>{
+    if(e.target.classList.contains('tn-exp')) return;
+    tDragNode=id;
+    const nd=tNodes[id];
+    tDragOX=e.clientX/tZoom-nd.x;
+    tDragOY=e.clientY/tZoom-nd.y;
+    el.style.zIndex=999;
+    e.stopPropagation();
+  });
+  el.addEventListener('click',e=>{
+    if(e.target.classList.contains('tn-exp')) return;
+    if(m){ switchTab('guide'); selectMove(m.cmd); }
+  });
+  el.addEventListener('mouseenter',e=>{ if(m) showPreview(e,m.cmd); });
+  el.addEventListener('mouseleave',hidePreview);
+
+  tc.appendChild(el);
+  tNodes[id]={x,y,w:NW,el,data,expanded:data.expanded||false};
+  el.style.left=x+'px'; el.style.top=y+'px';
+  return id;
+}
+
+function buildTExpBtn(id,data){
+  if(!data.children||!data.children.length) return '';
+  return `<button class="tn-exp${data.expanded?' open':''}" onclick="tToggle('${id}',event)">${data.expanded?'−':'+'}</button>`;
+}
+
+function buildTChildren(parentId,children){
+  const parent=tNodes[parentId];
+  if(!parent.expanded||!children||!children.length) return;
+  (children).forEach((child,i)=>{
+    const cx=parent.x+(i-(children.length-1)/2)*(NW+30);
+    const cy=parent.y+VGAP;
+    const childId=addTNode({...child,expanded:false},cx,cy);
+    tEdges.push({from:parentId,to:childId,best:child.best});
+    parent.data._kids=parent.data._kids||[];
+    parent.data._kids.push(childId);
+  });
+}
+
+function tToggle(id,e){
+  e.stopPropagation();
+  const nd=tNodes[id];
+  nd.expanded=!nd.expanded;
+  const btn=nd.el.querySelector('.tn-exp');
+  if(btn){btn.textContent=nd.expanded?'−':'+';btn.classList.toggle('open',nd.expanded);}
+  if(nd.expanded){
+    buildTChildren(id,nd.data.children);
+  } else {
+    tRemoveDesc(id);
+    tEdges=tEdges.filter(e=>e.from!==id);
+  }
+  tAutoLayout(); tApply();
+}
+
+function tRemoveDesc(id){
+  const nd=tNodes[id];
+  (nd.data._kids||[]).forEach(cid=>{
+    tRemoveDesc(cid);
+    if(tNodes[cid]){tNodes[cid].el.remove();delete tNodes[cid];}
+    tEdges=tEdges.filter(e=>e.from!==cid&&e.to!==cid);
+  });
+  nd.data._kids=[];
+}
+
+function tAutoLayout(){
+  const rootId=Object.keys(tNodes).find(id=>tNodes[id].data.isRoot);
+  if(!rootId) return;
+  const levels={};
+  const q=[{id:rootId,d:0}], vis=new Set();
+  while(q.length){
+    const{id,d}=q.shift();
+    if(vis.has(id)) continue; vis.add(id);
+    levels[d]=levels[d]||[];levels[d].push(id);
+    tEdges.filter(e=>e.from===id).forEach(e=>{ if(!vis.has(e.to)) q.push({id:e.to,d:d+1}); });
+  }
+  Object.entries(levels).forEach(([d,ids])=>{
+    ids.forEach((id,i)=>{
+      const nd=tNodes[id];
+      nd.x=40+i*HGAP;
+      nd.y=40+parseInt(d)*VGAP;
+      nd.el.style.left=nd.x+'px';
+      nd.el.style.top=nd.y+'px';
+    });
+  });
+  // Center
+  const allX=Object.values(tNodes).map(n=>n.x);
+  const off=(tvw.offsetWidth/tZoom-(Math.max(...allX)+NW-Math.min(...allX)))/2-Math.min(...allX);
+  Object.values(tNodes).forEach(nd=>{ nd.x+=off; nd.el.style.left=nd.x+'px'; });
+  tDrawEdges(); tMinimap();
+}
+
+function tExpandAll(){
+  function exp(id){
+    const nd=tNodes[id];
+    if(!nd.expanded&&nd.data.children?.length){
+      nd.expanded=true;
+      const b=nd.el.querySelector('.tn-exp');
+      if(b){b.textContent='−';b.classList.add('open');}
+      buildTChildren(id,nd.data.children);
+    }
+    (nd.data._kids||[]).forEach(cid=>exp(cid));
+  }
+  const root=Object.keys(tNodes).find(id=>tNodes[id].data.isRoot);
+  if(root) exp(root);
+  tAutoLayout(); tApply();
+}
+
+function tCollapseAll(){
+  const root=Object.keys(tNodes).find(id=>tNodes[id].data.isRoot);
+  if(!root) return;
+  const nd=tNodes[root];
+  (nd.data._kids||[]).forEach(cid=>{ tRemoveDesc(cid); tNodes[cid]?.el.remove(); delete tNodes[cid]; });
+  nd.data._kids=[];
+  tEdges=tEdges.filter(e=>e.from===root?false:true);
+  nd.expanded=true;
+  buildTChildren(root,nd.data.children);
+  tAutoLayout(); tApply();
+}
+
+function tDrawEdges(){
+  tsvg.innerHTML='';
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  [['am','#22cc90'],['an','#44446a']].forEach(([id,color])=>{
+    const mk=document.createElementNS('http://www.w3.org/2000/svg','marker');
+    mk.setAttribute('id',id);mk.setAttribute('viewBox','0 0 10 10');
+    mk.setAttribute('refX','8');mk.setAttribute('refY','5');
+    mk.setAttribute('markerWidth','6');mk.setAttribute('markerHeight','6');
+    mk.setAttribute('orient','auto-start-reverse');
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d','M2 1L8 5L2 9');p.setAttribute('fill','none');
+    p.setAttribute('stroke',color);p.setAttribute('stroke-width','1.5');
+    p.setAttribute('stroke-linecap','round');
+    mk.appendChild(p);defs.appendChild(mk);
+  });
+  tsvg.appendChild(defs);
+
+  tEdges.forEach(e=>{
+    const f=tNodes[e.from],t=tNodes[e.to];
+    if(!f||!t) return;
+    const fh=f.el.offsetHeight||80;
+    const x1=f.x+f.w/2,y1=f.y+fh,x2=t.x+t.w/2,y2=t.y;
+    const cy1=y1+(y2-y1)*.4,cy2=y2-(y2-y1)*.4;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${x1},${y1} C${x1},${cy1} ${x2},${cy2} ${x2},${y2}`);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke',e.best?'#22cc90':'#44446a');
+    path.setAttribute('stroke-width',e.best?'2':'1.5');
+    path.setAttribute('stroke-dasharray',e.best?'none':'5,4');
+    path.setAttribute('opacity',e.best?'.9':'.5');
+    path.setAttribute('marker-end',`url(#${e.best?'am':'an'})`);
+    tsvg.appendChild(path);
+
+    if(e.best){
+      const mx=(x1+x2)/2,my=(y1+y2)/2;
+      const r=document.createElementNS('http://www.w3.org/2000/svg','rect');
+      r.setAttribute('x',mx-14);r.setAttribute('y',my-7);r.setAttribute('width',28);r.setAttribute('height',13);
+      r.setAttribute('rx',3);r.setAttribute('fill','rgba(34,204,144,.12)');r.setAttribute('stroke','rgba(34,204,144,.25)');r.setAttribute('stroke-width','.5');
+      tsvg.appendChild(r);
+      const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x',mx);txt.setAttribute('y',my+4);txt.setAttribute('text-anchor','middle');
+      txt.setAttribute('fill','#22cc90');txt.setAttribute('font-size','8');txt.setAttribute('font-family','Share Tech Mono,monospace');
+      txt.textContent='★ REC';
+      tsvg.appendChild(txt);
+    }
+  });
+}
+
+function highlightTreeNode(cmd){
+  document.querySelectorAll('.tnode').forEach(el=>el.classList.remove('t-selected'));
+  Object.values(tNodes).forEach(nd=>{ if(nd.data.moveId===cmd) nd.el.classList.add('t-selected'); });
+}
+
+function tMinimap(){
+  const mc=document.getElementById('mm-canvas');
+  const ctx=mc.getContext('2d');
+  ctx.clearRect(0,0,300,180);
+  const ns=Object.values(tNodes);
+  if(!ns.length) return;
+  const xs=ns.map(n=>n.x),ys=ns.map(n=>n.y);
+  const mnx=Math.min(...xs),mxx=Math.max(...xs)+NW,mny=Math.min(...ys),mxy=Math.max(...ys)+80;
+  const s=Math.min(290/(mxx-mnx||1),170/(mxy-mny||1),.8);
+  tEdges.forEach(e=>{
+    const f=tNodes[e.from],t=tNodes[e.to];
+    if(!f||!t) return;
+    ctx.beginPath();ctx.strokeStyle=e.best?'#22cc9080':'#44446a60';ctx.lineWidth=.8;
+    ctx.moveTo(5+(f.x-mnx)*s+NW*s/2,5+(f.y-mny)*s);
+    ctx.lineTo(5+(t.x-mnx)*s+NW*s/2,5+(t.y-mny)*s);
+    ctx.stroke();
+  });
+  ns.forEach(n=>{
+    ctx.fillStyle=n.data.isRoot?'#a090ff':n.data.best?'#22cc90':'#33334480';
+    ctx.fillRect(5+(n.x-mnx)*s,5+(n.y-mny)*s,Math.max(NW*s,3),Math.max(10*s,2));
+  });
+  const vx=(-tPanX/tZoom-mnx)*s+5,vy=(-tPanY/tZoom-mny)*s+5;
+  const vw=(tvw.offsetWidth/tZoom)*s,vh=(tvw.offsetHeight/tZoom)*s;
+  ctx.strokeStyle='rgba(255,107,43,.6)';ctx.lineWidth=1;
+  ctx.strokeRect(vx,vy,vw,vh);
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// BUILDER ENGINE — Constructor de árbol libre
+// ═══════════════════════════════════════════════════════════
+let bNodes={}, bEdges=[], bIdSeq=0;
+let bZoom=1, bPanX=60, bPanY=40;
+let bDragNode=null, bDragOX=0, bDragOY=0;
+let bPanning=false, bPanSX=0, bPanSY=0, bPanOX=0, bPanOY=0;
+let bPickerParent=null;   // node id we're adding a child to
+const BNW=200, BVGAP=160, BHGAP=220;
+let bViewReady=false;
+
+let bConnecting=false, bConnectFrom=null, bConnectLine=null, bHoverTarget=null;
+let bSidebarDrag=null; // {cmd}
+
+const bldView  = ()=>document.getElementById('bld-view');
+const bldCanvas= ()=>document.getElementById('bld-canvas');
+const bldSvg   = ()=>document.getElementById('bld-svg');
+
+function bldViewReady(){
+  if(bViewReady) return;
+  bViewReady=true;
+  buildBldRootList();
+  renderSavedList();
+  const bv=bldView();
+  bv.addEventListener('wheel',e=>{e.preventDefault();bZoomAt(e.clientX,e.clientY,e.deltaY<0?1.12:1/1.12);},{passive:false});
+  bv.addEventListener('mousedown',e=>{
+    if(bDragNode||bConnecting||bSidebarDrag) return;
+    bPanning=true;bPanSX=e.clientX;bPanSY=e.clientY;bPanOX=bPanX;bPanOY=bPanY;
+    bv.style.cursor='grabbing';
+  });
+  document.addEventListener('mousemove',e=>{
+    if(bDragNote){
+      const nd=bNotes[bDragNote]; if(nd){
+        nd.x=e.clientX/bZoom-bDragNoteOX; nd.y=e.clientY/bZoom-bDragNoteOY;
+        nd.el.style.left=nd.x+'px'; nd.el.style.top=nd.y+'px';
+      } return;
+    }
+    if(bSidebarDrag){ bSidebarDragMove(e); return; }
+    if(bConnecting){ bConnectMove(e); return; }
+    if(bDragNode){
+      const nd=bNodes[bDragNode];
+      nd.x=e.clientX/bZoom-bDragOX; nd.y=e.clientY/bZoom-bDragOY;
+      nd.el.style.left=nd.x+'px'; nd.el.style.top=nd.y+'px';
+      bDrawEdges(); return;
+    }
+    if(bPanning){bPanX=bPanOX+(e.clientX-bPanSX);bPanY=bPanOY+(e.clientY-bPanSY);bApply();}
+  });
+  document.addEventListener('mouseup',e=>{
+    if(bDragNote){bNotes[bDragNote]?.el.style.removeProperty('z-index');bDragNote=null; return;}
+    if(bSidebarDrag){ bSidebarDragEnd(e); return; }
+    if(bConnecting){ bConnectEnd(e); return; }
+    if(bDragNode){bNodes[bDragNode].el.style.zIndex='';bDragNode=null;}
+    if(bPanning){bPanning=false;bldView().style.cursor='grab';}
+  });
+}
+
+function bApply(){
+  const c=bldCanvas();
+  c.style.transform=`translate(${bPanX}px,${bPanY}px) scale(${bZoom})`;
+  bDrawEdges();
+}
+function bZoomAt(cx,cy,f){
+  const nz=Math.min(3,Math.max(.15,bZoom*f));
+  bPanX=cx-nz/bZoom*(cx-bPanX);bPanY=cy-nz/bZoom*(cy-bPanY);bZoom=nz;bApply();
+}
+function bldZoomReset(){ bZoom=1;bPanX=60;bPanY=40;bApply(); }
+
+// Safety: edge is GREEN if origin block frame >= -9, RED otherwise
+// Edge safety: returns 'punible' | 'safe' | 'trap'
+// 'punible' = origin block < -9 (rival can punish)
+// 'safe'    = origin block >= -9 but NOT a frame trap
+// 'trap'    = origin block >= -9 AND block + next_startup <= 0 (rival can't interrupt)
+// Edge safety: 'safe' (verde) si situacion_val - startup_next <= 10, sino 'punible' (rojo)
+function parseBlock(s){
+  if(!s) return NaN;
+  return parseInt(String(s).replace(/[^0-9\-+]/g,''));
+}
+function parseStartup(s){
+  if(!s) return NaN;
+  const m=String(s).match(/i(\d+)/);
+  return m?parseInt(m[1]):NaN;
+}
+function edgeSafety(situationVal, nextStartup){
+  const sv = parseBlock(situationVal);   // frame advantage (ej: +8, -12)
+  const su = parseStartup(nextStartup);  // startup del siguiente move (ej: 15 de i15~17)
+  if(isNaN(sv)||isNaN(su)) return 'safe';
+  // su - sv <= 9 → SEGURO (rival no puede interrumpir)
+  // su - sv >= 10 → NO SEGURO (rival actúa antes)
+  // ej: +8, i15 → 15 - 8 = 7 → SEGURO ✓
+  // ej: +8, i21 → 21 - 8 = 13 → NO SEGURO ✓
+  // ej: -12, i12 → 12 - (-12) = 24 → NO SEGURO ✓
+  return (su - sv) <= 9 ? 'safe' : 'punible';
+}
+function isSafe(blockStr){ // kept for legacy
+  const n=parseBlock(blockStr);
+  return isNaN(n)?true:n>=-9;
+}
+
+function bAddNode(cmd, x, y, isRoot=false){
+  const id='bn'+(bIdSeq++);
+  const m=MOVES[cmd];
+  if(!m) return null;
+  const el=document.createElement('div');
+  el.className='bnode'+(isRoot?' bn-root':'');
+  el.style.width=BNW+'px';
+
+  const blkVal=m.block||'?';
+  const blkColor=parseInt(m.block)>=0?'#90ee90':(parseInt(m.block)>=-9?'#ffb830':'#ff8888');
+
+  el.innerHTML=`
+    <div class="bn-head">
+      <span class="bn-cmd">${m.cmd}</span>
+      <div class="bn-add" title="Arrastra para conectar">＋</div>
+      <div class="bn-del" title="Eliminar nodo" onclick="bDelNode('${id}',event)">✕</div>
+    </div>
+    <div class="bn-body">
+      <div class="bn-frames">
+        <div class="bn-f"><div class="bn-fl">SPEED</div><div class="bn-fv" style="color:var(--muted)">${m.startup}</div></div>
+        <div class="bn-f"><div class="bn-fl">BLOQUEO</div><div class="bn-fv" style="color:${blkColor}">${blkVal}</div></div>
+        <div class="bn-f"><div class="bn-fl">EN HIT</div><div class="bn-fv" style="color:#ffaa70">${m.hit}</div></div>
+        <div class="bn-f"><div class="bn-fl">COUNTER</div><div class="bn-fv" style="color:#ffcc88">${m.ch}</div></div>
+      </div>
+      <div class="bn-tags">${(m.tags||[]).map(t=>{const c=TAG_CFG[t]?.c||'#888';return`<span class="bn-tag" style="background:${c}20;color:${c};border:1px solid ${c}40">${t}</span>`;}).join('')}</div>
+      <div style="font-size:9px;color:var(--muted);margin-top:4px;font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${m.name}</div>
+    </div>`;
+
+  // drag node (from header, not from buttons)
+  el.querySelector('.bn-head').addEventListener('mousedown',e=>{
+    if(e.target.classList.contains('bn-add')||e.target.classList.contains('bn-del')) return;
+    bDragNode=id;
+    const nd=bNodes[id];
+    bDragOX=e.clientX/bZoom-nd.x; bDragOY=e.clientY/bZoom-nd.y;
+    el.style.zIndex=999;e.stopPropagation();
+  });
+  // connect-drag from + button
+  el.querySelector('.bn-add').addEventListener('mousedown',e=>{
+    e.stopPropagation(); e.preventDefault();
+    bConnectStart(id, e);
+  });
+  // click → select node (in builder) or go to guide (other tabs)
+  el.addEventListener('click',e=>{
+    if(e.target.classList.contains('bn-add')||e.target.classList.contains('bn-del')) return;
+    if(currentTab==='builder'){ bSelectNode(id); }
+    else { switchTab('guide'); selectMove(cmd); }
+  });
+  // hover preview
+  el.addEventListener('mouseenter',e=>showPreview(e,cmd));
+  el.addEventListener('mouseleave',hidePreview);
+
+  bldCanvas().appendChild(el);
+  bNodes[id]={x,y,w:BNW,el,cmd,isRoot};
+  el.style.left=x+'px'; el.style.top=y+'px';
+
+  // hide empty state
+  document.getElementById('bld-empty').style.display='none';
+  return id;
+}
+
+let bSelectedNode=null;
+
+function bSelectNode(id){
+  // deselect previous
+  if(bSelectedNode && bNodes[bSelectedNode]){
+    bNodes[bSelectedNode].el.classList.remove('bn-selected');
+  }
+  bSelectedNode=id;
+  if(id && bNodes[id]){
+    bNodes[id].el.classList.add('bn-selected');
+  }
+  // update sidebar hint
+  const hint=document.getElementById('bld-sidebar-hint');
+  if(hint) hint.textContent = id ? '→ AGREGAR COMO HIJO DEL NODO SELECCIONADO' : 'CLICK PARA INICIAR ÁRBOL';
+}
+
+function bDelNode(id, e){
+  e.stopPropagation();
+  function removeDesc(nid){
+    bEdges.filter(ed=>ed.from===nid).forEach(ed=>removeDesc(ed.to));
+    bEdges=bEdges.filter(ed=>ed.from!==nid&&ed.to!==nid);
+    if(bNodes[nid]){bNodes[nid].el.remove();delete bNodes[nid];}
+  }
+  removeDesc(id);
+  if(bSelectedNode===id) bSelectNode(null);
+  bDrawEdges();
+}
+
+function bldSetRoot(cmd){
+  bldClearCanvas();
+  const rootId=bAddNode(cmd,40,40,true);
+  if(rootId) bApply();
+}
+
+function bldReset(){
+  bldClearCanvas();
+  bSelectNode(null);
+  activeSavedId=null;
+  document.getElementById('bld-empty').style.display='flex';
+  const list=document.getElementById('bld-root-list');
+  if(list) list.querySelectorAll('.move-row').forEach(r=>r.classList.remove('active'));
+  renderSavedList();
+}
+
+function bldClearCanvas(){
+  Object.values(bNodes).forEach(n=>n.el.remove());
+  Object.values(bNotes).forEach(n=>n.el.remove());
+  bNodes={};bEdges=[];bIdSeq=0;bSelectedNode=null;
+  bNotes={};bNoteIdSeq=0;
+  bldSvg().innerHTML='';
+}
+
+// ── Picker popup ──
+// One-time: prevent canvas zoom when scrolling inside picker list
+document.getElementById('bld-picker').addEventListener('wheel',e=>e.stopPropagation(),{passive:true});
+
+function openPicker(parentId, e){
+  e.stopPropagation();
+  bPickerParent=parentId;
+  const pk=document.getElementById('bld-picker');
+  pk.style.display='block';
+  const x=Math.min(e.clientX+8, window.innerWidth-300);
+  const y=Math.min(e.clientY+8, window.innerHeight-380);
+  pk.style.left=x+'px'; pk.style.top=y+'px';
+  const inp=document.getElementById('bld-pick-inp');
+  inp.value='';
+  bldPickFilter('');
+  setTimeout(()=>inp.focus(),50);
+}
+function hidePicker(){
+  document.getElementById('bld-picker').style.display='none';
+  bPickerParent=null;
+}
+// Close picker on outside click
+document.addEventListener('click',e=>{
+  const pk=document.getElementById('bld-picker');
+  if(pk&&pk.style.display!=='none'&&!pk.contains(e.target)){
+    hidePicker();
+  }
+});
+
+function bldPickFilter(q){
+  const list=document.getElementById('bld-pick-list');
+  list.innerHTML='';
+  const ql=q.toLowerCase();
+  const grouped={};
+  GRPS.forEach(g=>grouped[g]=[]);
+  Object.values(MOVES).forEach(m=>{
+    if(!ql||m.cmd.toLowerCase().includes(ql)||m.name.toLowerCase().includes(ql)){
+      if(grouped[m.grp]) grouped[m.grp].push(m);
+    }
+  });
+  GRPS.forEach(g=>{
+    const items=grouped[g];
+    if(!items||!items.length) return;
+    const grpEl=document.createElement('div');
+    grpEl.className='bpick-grp';grpEl.textContent=g;list.appendChild(grpEl);
+    items.forEach(m=>{
+      const blkN=parseInt(m.block);
+      const safe=isSafe(m.block);
+      const blkColor=isNaN(blkN)?'var(--muted)':blkN>=0?'#90ee90':safe?'#ffb830':'#ff8888';
+      const opt=document.createElement('div');
+      opt.className='bpick-opt';
+      opt.innerHTML=`<span class="bpick-cmd">${m.cmd}</span><span class="bpick-name">${m.name}</span><span class="bpick-blk" style="color:${blkColor}">${m.block}</span>`;
+      opt.addEventListener('mousedown',e=>{e.preventDefault();bPickSelect(m.cmd);});
+      opt.addEventListener('mouseenter',e=>showPreview(e,m.cmd));
+      opt.addEventListener('mouseleave',hidePreview);
+      list.appendChild(opt);
+    });
+  });
+}
+
+// pending connection state — set before showing sit dialog
+let bPendingConn = null; // {parentId, cmd, cx, cy, fromSidebar}
+
+function bPickSelect(cmd){
+  if(!bPickerParent) return;
+  const parent=bNodes[bPickerParent];
+  if(!parent){ hidePicker(); return; }
+  const siblings=bEdges.filter(e=>e.from===bPickerParent).length;
+  const cx=parent.x+siblings*(BHGAP+10);
+  const cy=parent.y+BVGAP;
+  bPendingConn={parentId:bPickerParent, cmd, cx, cy, fromSidebar:false};
+  hidePicker();
+  showSitPicker(parent.cmd, cmd);
+}
+
+
+// ── Situation picker ──
+let bSitSelected = null; // 'hit'|'block'|'ch'
+
+function showSitPicker(originCmd, nextCmd){
+  const mo = MOVES[originCmd];
+  const mn = MOVES[nextCmd];
+  if(!mo || !mn) return;
+
+  bSitSelected = null;
+  document.getElementById('bld-sit-origin').textContent = originCmd;
+  document.getElementById('bld-sit-next').textContent   = nextCmd;
+
+  const su = parseStartup(mn.startup); // startup of next move
+  const suLabel = isNaN(su) ? mn.startup : 'i'+su;
+
+  const situations = [
+    { key:'hit',   label:'EN HIT',         val: mo.hit,   color:'#ffaa70' },
+    { key:'block', label:'EN BLOQUEO',      val: mo.block, color: parseInt(mo.block)>=-9?'#ffb830':'#ff8888' },
+    { key:'ch',    label:'EN COUNTER HIT',  val: mo.ch,    color:'#ffcc88' },
+  ];
+
+  const container = document.getElementById('bld-sit-options');
+  container.innerHTML = '';
+
+  situations.forEach(sit=>{
+    const frames = parseBlock(sit.val);
+    const result = isNaN(frames)||isNaN(su) ? null : su - frames;
+    const isSafeEdge = result !== null && result <= 9;
+
+    let resultColor, resultLabel;
+    if(result === null){
+      resultColor='var(--dim)'; resultLabel='?';
+    } else if(isSafeEdge){
+      resultColor='#22cc90'; resultLabel=`${result>=0?'+'+result:result} → SEGURO ✓`;
+    } else {
+      resultColor='#ff5060'; resultLabel=`${result>=0?'+'+result:result} → NO SEGURO`;
+    }
+
+    const opt = document.createElement('div');
+    opt.className = 'sit-opt';
+    opt.dataset.key = sit.key;
+    opt.innerHTML = `
+      <div class="sit-opt-dot" style="background:${sit.color};"></div>
+      <div style="flex:1;">
+        <div class="sit-opt-label">${sit.label}</div>
+        <div class="sit-opt-val" style="color:${sit.color}">${sit.val||'?'}</div>
+        ${result!==null?`<div class="sit-opt-calc" style="background:${resultColor}18;color:${resultColor};border:1px solid ${resultColor}30">${suLabel} − (${sit.val}) = ${result>=0?'+'+result:result} ${isSafeEdge?'≤ 9 ✓':'≥ 10 ✗'}</div>`:''}
+      </div>
+      <div class="sit-opt-result" style="color:${resultColor};font-size:9px;font-family:var(--mono);font-weight:600;">${resultLabel}</div>`;
+    opt.addEventListener('click', ()=>{
+      container.querySelectorAll('.sit-opt').forEach(o=>o.classList.remove('sit-selected'));
+      opt.classList.add('sit-selected');
+      opt.style.borderColor = sit.color;
+      bSitSelected = sit.key;
+    });
+    container.appendChild(opt);
+  });
+
+  // confirm button
+  const btn = document.createElement('button');
+  btn.className = 'sit-confirm';
+  btn.textContent = 'CONFIRMAR CONEXIÓN';
+  btn.addEventListener('click', bldConfirmSit);
+  container.appendChild(btn);
+
+  document.getElementById('bld-sit-overlay').classList.add('show');
+}
+
+function hideSitPicker(){
+  document.getElementById('bld-sit-overlay').classList.remove('show');
+  bPendingConn = null;
+  bSitSelected = null;
+}
+
+function bldConfirmSit(){
+  if(!bPendingConn) return;
+  const {parentId, targetId, cmd, cx, cy, fromDrag} = bPendingConn;
+  const parent = bNodes[parentId];
+  if(!parent){ hideSitPicker(); return; }
+
+  const mo = MOVES[parent.cmd];
+  const sitKey = bSitSelected || 'block';
+  const originFrameStr = sitKey==='hit' ? mo?.hit : sitKey==='ch' ? mo?.ch : mo?.block;
+
+  if(fromDrag && targetId){
+    // Connect two existing nodes
+    const target = bNodes[targetId];
+    if(!target){ hideSitPicker(); return; }
+    const safety = edgeSafety(originFrameStr, MOVES[target.cmd]?.startup);
+    bEdges.push({from:parentId, to:targetId, safety, situation:sitKey, situationVal:originFrameStr});
+    bDrawEdges();
+    bSelectNode(targetId);
+  } else {
+    // Create new node from picker
+    const safety = edgeSafety(originFrameStr, MOVES[cmd]?.startup);
+    const childId = bAddNode(cmd, cx, cy, false);
+    if(childId){
+      bEdges.push({from:parentId, to:childId, safety, situation:sitKey, situationVal:originFrameStr});
+      bDrawEdges();
+      bSelectNode(childId);
+    }
+  }
+  hideSitPicker();
+}
+
+// Close sit overlay on backdrop click
+document.getElementById('bld-sit-overlay').addEventListener('click', e=>{
+  if(e.target===document.getElementById('bld-sit-overlay')) hideSitPicker();
+});
+
+// ── Auto layout ──
+function bldAutoLayout(){ bAutoLayout(); bApply(); }
+
+function bAutoLayout(){
+  // Find root
+  const allTo=new Set(bEdges.map(e=>e.to));
+  const rootId=Object.keys(bNodes).find(id=>!allTo.has(id));
+  if(!rootId) return;
+
+  const levels={};
+  const q=[{id:rootId,d:0}]; const vis=new Set();
+  while(q.length){
+    const {id,d}=q.shift();
+    if(vis.has(id)) continue; vis.add(id);
+    levels[d]=levels[d]||[]; levels[d].push(id);
+    bEdges.filter(e=>e.from===id).forEach(e=>{ if(!vis.has(e.to)) q.push({id:e.to,d:d+1}); });
+  }
+  // Assign positions
+  Object.entries(levels).forEach(([d,ids])=>{
+    ids.forEach((id,i)=>{
+      const nd=bNodes[id];
+      nd.x=40+i*(BHGAP);
+      nd.y=40+parseInt(d)*BVGAP;
+      nd.el.style.left=nd.x+'px';
+      nd.el.style.top=nd.y+'px';
+    });
+  });
+  // Center horizontally
+  const allX=Object.values(bNodes).map(n=>n.x);
+  if(allX.length<2) return;
+  const bv=bldView();
+  const off=(bv.offsetWidth/bZoom-(Math.max(...allX)+BNW-Math.min(...allX)))/2-Math.min(...allX);
+  Object.values(bNodes).forEach(nd=>{nd.x+=off; nd.el.style.left=nd.x+'px';});
+}
+
+// ── Draw edges ──
+const EDGE_CFG = {
+  safe:    {color:'#22cc90', label:'SEGURO',  bg:'rgba(34,204,144,.15)', brd:'rgba(34,204,144,.35)'},
+  punible: {color:'#ff5060', label:'NO SEGURO', bg:'rgba(255,80,96,.15)',  brd:'rgba(255,80,96,.35)'},
+};
+
+function bDrawEdges(){
+  const svg=bldSvg();
+  svg.innerHTML='';
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  Object.entries(EDGE_CFG).forEach(([key,cfg])=>{
+    const mk=document.createElementNS('http://www.w3.org/2000/svg','marker');
+    mk.setAttribute('id','bam-'+key);mk.setAttribute('viewBox','0 0 10 10');
+    mk.setAttribute('refX','8');mk.setAttribute('refY','5');
+    mk.setAttribute('markerWidth','6');mk.setAttribute('markerHeight','6');
+    mk.setAttribute('orient','auto-start-reverse');
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d','M2 1L8 5L2 9');p.setAttribute('fill','none');
+    p.setAttribute('stroke',cfg.color);p.setAttribute('stroke-width','1.5');
+    p.setAttribute('stroke-linecap','round');
+    mk.appendChild(p);defs.appendChild(mk);
+  });
+  svg.appendChild(defs);
+
+  bEdges.forEach(ed=>{
+    const f=bNodes[ed.from],t=bNodes[ed.to];
+    if(!f||!t) return;
+    // support legacy edges
+    const safety = (ed.safety==='punible') ? 'punible' : 'safe';
+    const cfg = EDGE_CFG[safety];
+
+    // Situation sub-label
+    const sitMap={hit:'HIT',block:'BLOQUEO',ch:'CH'};
+    const sitLabel = ed.situation ? `${sitMap[ed.situation]||''} ${ed.situationVal||''}` : '';
+
+    const fh=f.el.offsetHeight||90;
+    const x1=f.x+BNW/2, y1=f.y+fh;
+    const x2=t.x+BNW/2, y2=t.y;
+    const cy1=y1+(y2-y1)*.4, cy2=y2-(y2-y1)*.4;
+
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${x1},${y1} C${x1},${cy1} ${x2},${cy2} ${x2},${y2}`);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke',cfg.color);
+    path.setAttribute('stroke-width','2.5');
+    path.setAttribute('opacity','.88');
+    path.setAttribute('marker-end',`url(#bam-${safety})`);
+    svg.appendChild(path);
+
+    // Label
+    const mx=(x1+x2)/2, my=(y1+y2)/2;
+    const tw=cfg.label.length*5+10;
+    const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x',mx-tw/2);rect.setAttribute('y',my-8);
+    rect.setAttribute('width',tw);rect.setAttribute('height',14);
+    rect.setAttribute('rx',3);rect.setAttribute('fill',cfg.bg);
+    rect.setAttribute('stroke',cfg.brd);rect.setAttribute('stroke-width','.6');
+    svg.appendChild(rect);
+
+    const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x',mx);txt.setAttribute('y',my+4);
+    txt.setAttribute('text-anchor','middle');
+    txt.setAttribute('fill',cfg.color);
+    txt.setAttribute('font-size','8');
+    txt.setAttribute('font-family','Share Tech Mono,monospace');
+    txt.setAttribute('letter-spacing','0.5');
+    txt.textContent=cfg.label;
+    svg.appendChild(txt);
+
+    // Situation context below main label
+    if(sitLabel){
+      const srect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+      const stw=sitLabel.length*4.5+10;
+      srect.setAttribute('x',mx-stw/2);srect.setAttribute('y',my+9);
+      srect.setAttribute('width',stw);srect.setAttribute('height',12);
+      srect.setAttribute('rx',2);srect.setAttribute('fill','rgba(0,0,0,.4)');
+      srect.setAttribute('stroke',cfg.color+'50');srect.setAttribute('stroke-width','.5');
+      svg.appendChild(srect);
+      const stxt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      stxt.setAttribute('x',mx);stxt.setAttribute('y',my+18);
+      stxt.setAttribute('text-anchor','middle');
+      stxt.setAttribute('fill',cfg.color+'cc');
+      stxt.setAttribute('font-size','7');
+      stxt.setAttribute('font-family','Share Tech Mono,monospace');
+      stxt.textContent=sitLabel;
+      svg.appendChild(stxt);
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// SAVED COMBOS — localStorage persistence
+// ═══════════════════════════════════════════════════════════
+const SAVE_KEY = 'lars_t8_combos';
+let savedCombos = [];      // [{id, name, date, nodes, edges}]
+let activeSavedId = null;  // currently loaded combo id
+
+function saveLoad(){
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    savedCombos = raw ? JSON.parse(raw) : [];
+  } catch(e){ savedCombos = []; }
+}
+
+function savePersist(){
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(savedCombos)); } catch(e){}
+}
+
+// Serialize current canvas state
+function bldSerialize(){
+  const nodes = {};
+  Object.entries(bNodes).forEach(([id, nd])=>{
+    nodes[id] = { x: nd.x, y: nd.y, cmd: nd.cmd, isRoot: nd.isRoot };
+  });
+  const edges = bEdges.map(e=>({ from: e.from, to: e.to, safety: e.safety||'safe', situation: e.situation||null, situationVal: e.situationVal||null }));
+  const notes = {};
+  Object.entries(bNotes).forEach(([id, nd])=>{
+    notes[id] = { x: nd.x, y: nd.y, text: nd.el.querySelector('.bnote-body').innerText||'' };
+  });
+  return { nodes, edges, notes, idSeq: bIdSeq, noteIdSeq: bNoteIdSeq };
+}
+
+// Restore canvas from serialized state
+function bldDeserialize(data){
+  bldClearCanvas();
+  if(!data || !data.nodes) return;
+  // Restore id sequence
+  bIdSeq = data.idSeq || 0;
+  // Recreate nodes preserving original ids
+  Object.entries(data.nodes).forEach(([id, nd])=>{
+    const el = document.createElement('div');
+    const m = MOVES[nd.cmd];
+    if(!m) return;
+    el.className = 'bnode' + (nd.isRoot ? ' bn-root' : '');
+    el.style.width = BNW + 'px';
+    const blkVal = m.block || '?';
+    const blkColor = parseInt(m.block)>=0?'#90ee90':(parseInt(m.block)>=-9?'#ffb830':'#ff8888');
+    el.innerHTML = `
+      <div class="bn-head">
+        <span class="bn-cmd">${m.cmd}</span>
+        <div class="bn-add" title="Arrastra para conectar">＋</div>
+        <div class="bn-del" title="Eliminar nodo" onclick="bDelNode('${id}',event)">✕</div>
+      </div>
+      <div class="bn-body">
+        <div class="bn-frames">
+          <div class="bn-f"><div class="bn-fl">SPEED</div><div class="bn-fv" style="color:var(--muted)">${m.startup}</div></div>
+          <div class="bn-f"><div class="bn-fl">BLOQUEO</div><div class="bn-fv" style="color:${blkColor}">${blkVal}</div></div>
+          <div class="bn-f"><div class="bn-fl">EN HIT</div><div class="bn-fv" style="color:#ffaa70">${m.hit}</div></div>
+          <div class="bn-f"><div class="bn-fl">COUNTER</div><div class="bn-fv" style="color:#ffcc88">${m.ch}</div></div>
+        </div>
+        <div class="bn-tags">${(m.tags||[]).map(t=>{const c=TAG_CFG[t]?.c||'#888';return`<span class="bn-tag" style="background:${c}20;color:${c};border:1px solid ${c}40">${t}</span>`;}).join('')}</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:4px;font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${m.name}</div>
+      </div>`;
+    // drag node
+    el.querySelector('.bn-head').addEventListener('mousedown', e2=>{
+      if(e2.target.classList.contains('bn-add')||e2.target.classList.contains('bn-del')) return;
+      bDragNode=id;
+      const ndd=bNodes[id];
+      bDragOX=e2.clientX/bZoom-ndd.x; bDragOY=e2.clientY/bZoom-ndd.y;
+      el.style.zIndex=999; e2.stopPropagation();
+    });
+    // connect-drag from + button
+    el.querySelector('.bn-add').addEventListener('mousedown', e2=>{
+      e2.stopPropagation(); e2.preventDefault();
+      bConnectStart(id, e2);
+    });
+    el.addEventListener('click', e2=>{
+      if(e2.target.classList.contains('bn-add')||e2.target.classList.contains('bn-del')) return;
+      if(currentTab==='builder') bSelectNode(id);
+      else { switchTab('guide'); selectMove(nd.cmd); }
+    });
+    el.addEventListener('mouseenter', e2=>showPreview(e2, nd.cmd));
+    el.addEventListener('mouseleave', hidePreview);
+    bldCanvas().appendChild(el);
+    el.style.left = nd.x + 'px';
+    el.style.top  = nd.y + 'px';
+    bNodes[id] = { x: nd.x, y: nd.y, w: BNW, el, cmd: nd.cmd, isRoot: nd.isRoot };
+  });
+  // Restore edges
+  bEdges = data.edges.map(e => ({ from: e.from, to: e.to, safety: e.safety || (e.safe===false?'punible':'safe'), situation: e.situation||null, situationVal: e.situationVal||null }));
+  // Restore notes
+  if(data.notes){
+    bNoteIdSeq = data.noteIdSeq || 0;
+    Object.entries(data.notes).forEach(([id, nd])=>{
+      bCreateNote(nd.x, nd.y, nd.text||'');
+    });
+  }
+  document.getElementById('bld-empty').style.display = 'none';
+  bDrawEdges();
+  bApply();
+}
+
+// ── Save flow ──
+function bldSaveCombo(){
+  if(Object.keys(bNodes).length === 0){
+    // flash the button briefly
+    return;
+  }
+  const overlay = document.getElementById('bld-name-overlay');
+  const inp = document.getElementById('bld-name-inp');
+  // Suggest a name from root node
+  const allTo = new Set(bEdges.map(e=>e.to));
+  const rootId = Object.keys(bNodes).find(id=>!allTo.has(id));
+  inp.value = rootId && bNodes[rootId] ? bNodes[rootId].cmd + ' combo' : '';
+  overlay.classList.add('show');
+  setTimeout(()=>{ inp.focus(); inp.select(); }, 50);
+}
+
+function bldNameCancel(){
+  document.getElementById('bld-name-overlay').classList.remove('show');
+}
+
+function bldNameConfirm(){
+  const inp = document.getElementById('bld-name-inp');
+  const name = inp.value.trim() || 'Combo sin nombre';
+  document.getElementById('bld-name-overlay').classList.remove('show');
+
+  const id = 'c' + Date.now();
+  const date = new Date().toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'2-digit'});
+  const nodeCount = Object.keys(bNodes).length;
+  savedCombos.unshift({ id, name, date, nodeCount, state: bldSerialize() });
+  savePersist();
+  activeSavedId = id;
+  renderSavedList();
+}
+
+// Enter key on name input
+document.addEventListener('DOMContentLoaded',()=>{
+  const ni = document.getElementById('bld-name-inp');
+  if(ni) ni.addEventListener('keydown', e=>{ if(e.key==='Enter') bldNameConfirm(); if(e.key==='Escape') bldNameCancel(); });
+});
+
+// ── Load / Delete ──
+function bldLoadCombo(id){
+  const combo = savedCombos.find(c=>c.id===id);
+  if(!combo) return;
+  bldDeserialize(combo.state);
+  activeSavedId = id;
+  renderSavedList();
+  // deselect sidebar root highlight
+  const list = document.getElementById('bld-root-list');
+  if(list) list.querySelectorAll('.move-row').forEach(r=>r.classList.remove('active'));
+}
+
+function bldDeleteCombo(id, e){
+  e.stopPropagation();
+  if(!confirm('¿Eliminar este combo?')) return;
+  savedCombos = savedCombos.filter(c=>c.id!==id);
+  savePersist();
+  if(activeSavedId === id) activeSavedId = null;
+  renderSavedList();
+}
+
+function bldUpdateCombo(){
+  if(!activeSavedId) return;
+  if(Object.keys(bNodes).length === 0) return;
+  const idx = savedCombos.findIndex(c=>c.id===activeSavedId);
+  if(idx === -1) return;
+  savedCombos[idx].state    = bldSerialize();
+  savedCombos[idx].nodeCount = Object.keys(bNodes).length;
+  savedCombos[idx].date     = new Date().toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'2-digit'});
+  savePersist();
+  renderSavedList();
+}
+
+function bldRenameCombo(id, e){
+  e.stopPropagation();
+  const combo = savedCombos.find(c=>c.id===id);
+  if(!combo) return;
+  const newName = prompt('Nuevo nombre:', combo.name);
+  if(newName === null) return;
+  combo.name = newName.trim() || combo.name;
+  savePersist();
+  renderSavedList();
+}
+
+// ── Render saved list ──
+function renderSavedList(){
+  const el = document.getElementById('bld-saved-list');
+  const count = document.getElementById('bld-save-count');
+  const updateBtn = document.getElementById('bld-update-btn');
+  if(!el) return;
+  count.textContent = savedCombos.length ? `(${savedCombos.length})` : '';
+  if(updateBtn) updateBtn.style.display = activeSavedId ? 'block' : 'none';
+  if(!savedCombos.length){
+    el.innerHTML = '<div class="saved-empty">Ningún combo guardado aún.<br>Construye un árbol y pulsa<br>＋ GUARDAR ÁRBOL ACTUAL.</div>';
+    return;
+  }
+  el.innerHTML = '';
+  savedCombos.forEach(c=>{
+    const isActive = activeSavedId === c.id;
+    const row = document.createElement('div');
+    row.className = 'saved-row' + (isActive ? ' active-saved' : '');
+    row.innerHTML = `
+      <div style="flex:1;min-width:0;cursor:pointer;">
+        <div class="saved-name">${c.name}</div>
+        <div class="saved-meta">${c.nodeCount} nodos · ${c.date}</div>
+      </div>
+      <div style="display:flex;gap:3px;flex-shrink:0;">
+        <div class="saved-action" title="Renombrar" style="color:var(--amber);">✎</div>
+        <div class="saved-del" title="Eliminar">✕</div>
+      </div>`;
+    row.querySelector('div[style*="flex:1"]').addEventListener('click', ()=>bldLoadCombo(c.id));
+    row.querySelector('.saved-action').addEventListener('click', e=>bldRenameCombo(c.id, e));
+    row.querySelector('.saved-del').addEventListener('click', e=>bldDeleteCombo(c.id, e));
+    el.appendChild(row);
+  });
+}
+
+// Init on load
+saveLoad();
+
+buildMoveList();
+
+// ── Root sidebar list ──
+function bldRootFilter(q){
+  buildBldRootList(q.toLowerCase());
+}
+
+function buildBldRootList(filter=''){
+  const el=document.getElementById('bld-root-list');
+  if(!el) return;
+  el.innerHTML='';
+  const grouped={};
+  GRPS.forEach(g=>grouped[g]=[]);
+  Object.values(MOVES).forEach(m=>{
+    if(!filter||m.cmd.toLowerCase().includes(filter)||m.name.toLowerCase().includes(filter))
+      if(grouped[m.grp]) grouped[m.grp].push(m);
+  });
+  GRPS.forEach(g=>{
+    const items=grouped[g];
+    if(!items||!items.length) return;
+    const lbl=document.createElement('div');
+    lbl.className='grp-label'; lbl.textContent=g;
+    el.appendChild(lbl);
+    items.forEach(m=>{
+      const row=document.createElement('div');
+      row.className='move-row';
+      row.innerHTML=`<span class="mr-cmd">${m.cmd}</span><span class="mr-name">${m.name}</span>${m.isNew?'<span class="mr-new">NEW</span>':''}`;
+      // Drag to canvas
+      row.addEventListener('mousedown',e=>{
+        if(e.button!==0) return;
+        e.preventDefault();
+        bSidebarDragStart(m.cmd, e);
+      });
+      // Click: just place node on canvas (free positioning)
+      row.addEventListener('click',()=>{
+        if(bSidebarDrag) return; // skip click after drag
+        // Place at a default position if canvas is empty, otherwise near last selected node
+        let cx=80, cy=80;
+        if(bSelectedNode && bNodes[bSelectedNode]){
+          const p=bNodes[bSelectedNode];
+          const siblings=bEdges.filter(e=>e.from===bSelectedNode).length;
+          cx=p.x+siblings*(BHGAP+10); cy=p.y+BVGAP;
+        }
+        const isFirst=Object.keys(bNodes).length===0;
+        const newId=bAddNode(m.cmd,cx,cy,isFirst);
+        if(newId){ bSelectNode(newId); bApply(); }
+        el.querySelectorAll('.move-row').forEach(r=>r.classList.remove('active'));
+        row.classList.add('active');
+      });
+      row.addEventListener('mouseenter',e=>showPreview(e,m.cmd));
+      row.addEventListener('mouseleave',hidePreview);
+      el.appendChild(row);
+    });
+  });
+}
+
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') hidePicker(); });
+
+// ── Notes (comment boxes) ──
+let bNotes={}; // {id: {x,y,text,el}}
+let bNoteIdSeq=0;
+let bDragNote=null, bDragNoteOX=0, bDragNoteOY=0;
+
+function bldAddNote(){
+  // Place in center of current view
+  const bv=bldView();
+  const cx=(bv.offsetWidth/2-bPanX)/bZoom;
+  const cy=(bv.offsetHeight/2-bPanY)/bZoom;
+  bCreateNote(cx-80, cy-30, '');
+  bApply();
+  document.getElementById('bld-empty').style.display='none';
+}
+
+function bCreateNote(x, y, text){
+  const id='nt'+(bNoteIdSeq++);
+  const el=document.createElement('div');
+  el.className='bnote';
+  el.style.left=x+'px'; el.style.top=y+'px';
+  el.innerHTML=`
+    <div class="bnote-head">
+      <span class="bnote-icon">💬</span>
+      <span style="font-family:var(--mono);font-size:8px;color:rgba(255,184,48,.6);letter-spacing:1px;">NOTA</span>
+      <div class="bnote-del" onclick="bDeleteNote('${id}',event)">✕</div>
+    </div>
+    <div class="bnote-body" contenteditable="true" data-ph="Escribe tu nota aquí…" spellcheck="false">${text}</div>`;
+
+  // drag from header
+  el.querySelector('.bnote-head').addEventListener('mousedown',e=>{
+    if(e.target.classList.contains('bnote-del')) return;
+    e.stopPropagation();
+    bDragNote=id;
+    const nd=bNotes[id];
+    bDragNoteOX=e.clientX/bZoom-nd.x;
+    bDragNoteOY=e.clientY/bZoom-nd.y;
+    el.style.zIndex=998;
+  });
+
+  // save text on input
+  el.querySelector('.bnote-body').addEventListener('input',e=>{
+    if(bNotes[id]) bNotes[id].text=e.target.innerText;
+  });
+
+  // prevent canvas pan when clicking inside note body
+  el.querySelector('.bnote-body').addEventListener('mousedown',e=>e.stopPropagation());
+
+  bldCanvas().appendChild(el);
+  bNotes[id]={x, y, text, el};
+  return id;
+}
+
+function bDeleteNote(id, e){
+  e.stopPropagation();
+  if(bNotes[id]){bNotes[id].el.remove(); delete bNotes[id];}
+}
+
+// ── Sidebar drag-to-canvas ──
+function bSidebarDragStart(cmd, e){
+  if(currentTab!=='builder') return;
+  bSidebarDrag={cmd};
+  const g=document.getElementById('bld-drag-ghost');
+  g.textContent=cmd; g.style.display='block';
+  g.style.left=(e.clientX+14)+'px'; g.style.top=(e.clientY-18)+'px';
+  document.body.style.userSelect='none';
+}
+function bSidebarDragMove(e){
+  if(!bSidebarDrag) return;
+  const g=document.getElementById('bld-drag-ghost');
+  g.style.left=(e.clientX+14)+'px'; g.style.top=(e.clientY-18)+'px';
+  const bv=bldView(), r=bv.getBoundingClientRect();
+  const over=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
+  bv.classList.toggle('bld-drop-active',over);
+}
+function bSidebarDragEnd(e){
+  if(!bSidebarDrag) return;
+  const cmd=bSidebarDrag.cmd;
+  bSidebarDrag=null;
+  document.getElementById('bld-drag-ghost').style.display='none';
+  document.body.style.userSelect='';
+  const bv=bldView(); bv.classList.remove('bld-drop-active');
+  const r=bv.getBoundingClientRect();
+  if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom) return;
+  // Convert to canvas coords
+  const cx=(e.clientX-r.left-bPanX)/bZoom;
+  const cy=(e.clientY-r.top-bPanY)/bZoom;
+  const isFirst=Object.keys(bNodes).length===0;
+  const newId=bAddNode(cmd,cx-BNW/2,cy-45,isFirst);
+  if(newId){ bSelectNode(newId); bApply(); }
+}
+
+// ── Connect-drag from ＋ button ──
+function bConnectStart(fromId, e){
+  bConnecting=true; bConnectFrom=fromId;
+  bldView().style.cursor='crosshair';
+  bNodes[fromId].el.querySelector('.bn-add').style.background='rgba(255,107,43,.4)';
+  // temp line
+  const svg=bldSvg();
+  bConnectLine=document.createElementNS('http://www.w3.org/2000/svg','line');
+  bConnectLine.setAttribute('stroke','#ff6b2b');
+  bConnectLine.setAttribute('stroke-width','2');
+  bConnectLine.setAttribute('stroke-dasharray','6,4');
+  bConnectLine.setAttribute('opacity','.8');
+  bConnectLine.setAttribute('pointer-events','none');
+  svg.appendChild(bConnectLine);
+  bConnectMove(e);
+}
+function bConnectMove(e){
+  if(!bConnecting||!bConnectLine) return;
+  const nd=bNodes[bConnectFrom]; if(!nd) return;
+  const fh=nd.el.offsetHeight||90;
+  const x1=nd.x+BNW/2, y1=nd.y+fh;
+  const bvr=bldView().getBoundingClientRect();
+  const x2=(e.clientX-bvr.left-bPanX)/bZoom;
+  const y2=(e.clientY-bvr.top-bPanY)/bZoom;
+  bConnectLine.setAttribute('x1',x1);bConnectLine.setAttribute('y1',y1);
+  bConnectLine.setAttribute('x2',x2);bConnectLine.setAttribute('y2',y2);
+  // hover highlight
+  const hit=bHitTestNode(e.clientX,e.clientY);
+  if(hit!==bHoverTarget){
+    if(bHoverTarget&&bNodes[bHoverTarget]) bNodes[bHoverTarget].el.classList.remove('bn-connect-target');
+    bHoverTarget=(hit&&hit!==bConnectFrom)?hit:null;
+    if(bHoverTarget&&bNodes[bHoverTarget]) bNodes[bHoverTarget].el.classList.add('bn-connect-target');
+  }
+  bConnectLine.setAttribute('stroke',bHoverTarget?'#22cc90':'#ff6b2b');
+}
+function bConnectEnd(e){
+  if(!bConnecting) return;
+  bConnecting=false;
+  bldView().style.cursor='grab';
+  if(bNodes[bConnectFrom]) bNodes[bConnectFrom].el.querySelector('.bn-add').style.background='';
+  if(bConnectLine){bConnectLine.remove();bConnectLine=null;}
+  if(bHoverTarget&&bNodes[bHoverTarget]) bNodes[bHoverTarget].el.classList.remove('bn-connect-target');
+  const targetId=bHoverTarget; bHoverTarget=null;
+  if(!targetId||targetId===bConnectFrom) return;
+  // Show situation picker to choose connection type
+  bPendingConn={parentId:bConnectFrom, targetId, fromDrag:true};
+  showSitPicker(bNodes[bConnectFrom].cmd, bNodes[targetId].cmd);
+}
+function bHitTestNode(sx,sy){
+  const bvr=bldView().getBoundingClientRect();
+  const cx=(sx-bvr.left-bPanX)/bZoom, cy=(sy-bvr.top-bPanY)/bZoom;
+  return Object.keys(bNodes).find(id=>{
+    const nd=bNodes[id];
+    return cx>=nd.x&&cx<=nd.x+BNW&&cy>=nd.y&&cy<=nd.y+(nd.el.offsetHeight||90);
+  })||null;
+}
+
+// ── Export / Import combos ──
+function bldExportCombos(){
+  if(!savedCombos.length){ alert('No hay combos guardados para exportar.'); return; }
+  const data = JSON.stringify(savedCombos, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'lars_combos.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function bldImportCombos(){
+  document.getElementById('bld-import-input').click();
+}
+
+function bldImportFile(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if(!Array.isArray(data)) throw new Error('Formato inválido');
+      // Merge: add only combos not already saved (by name)
+      const existingNames = new Set(savedCombos.map(c=>c.name));
+      let added = 0;
+      data.forEach(c => {
+        if(c.name && c.nodes && c.edges){
+          if(!existingNames.has(c.name)){ savedCombos.push(c); added++; }
+        }
+      });
+      bldPersist();
+      bldRenderSaved();
+      alert(added > 0 ? `✓ ${added} combo(s) importado(s).` : 'No se encontraron combos nuevos (ya existen).');
+    } catch(err){
+      alert('Error al leer el archivo: ' + err.message);
+    }
+    // Reset input so same file can be re-imported if needed
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+</script>
+</html>
