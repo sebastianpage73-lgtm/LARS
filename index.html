@@ -2710,11 +2710,11 @@ function bldImportFile(e){
       const existingNames = new Set(savedCombos.map(c=>c.name));
       let added = 0;
       data.forEach(c => {
-        if(c.name && c.nodes && c.edges){
+        if(c.name && c.state && c.state.nodes && c.state.edges){
           if(!existingNames.has(c.name)){ savedCombos.push(c); added++; }
         }
       });
-      bldPersist();
+      savePersist();
       bldRenderSaved();
       alert(added > 0 ? `✓ ${added} combo(s) importado(s).` : 'No se encontraron combos nuevos (ya existen).');
     } catch(err){
